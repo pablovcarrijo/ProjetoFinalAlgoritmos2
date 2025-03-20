@@ -1,0 +1,48 @@
+João Silva
+123.456.789-00
+(11) 98765-4321
+joao.silva@example.com
+Maria Oliveira
+987.654.321-00
+(21) 12345-6789
+maria.oliveira@example.com
+Carlos Souza
+456.789.123-00
+(31) 55555-5555
+carlos.souza@example.com
+Ana Costa
+789.123.456-00
+(41) 99999-9999
+ana.costa@example.com
+Pedro Santos
+321.654.987-00
+(51) 88888-8888
+pedro.santos@example.com
+Fernanda Lima
+654.987.321-00
+(61) 77777-7777
+fernanda.lima@example.com
+Ricardo Almeida
+147.258.369-00
+(71) 66666-6666
+ricardo.almeida@example.com
+Juliana Pereira
+258.369.147-00
+(81) 44444-4444
+juliana.pereira@example.com
+Lucas Mendes
+369.147.258-00
+(85) 33333-3333
+lucas.mendes@example.com
+Patrícia Rocha
+951.753.852-00
+(91) 22222-2222
+patricia.rocha@example.com
+Roberto Ferreira
+753.951.852-00
+(92) 33333-3333
+roberto.ferreira@example.com
+Pablo Vinicius
+124.567.789-10
+(34) 9999-9999
+pablo@gmail
