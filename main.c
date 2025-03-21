@@ -4,26 +4,29 @@
 #include <stdbool.h>
 
 #define MIN_ALOC 20
-int contAtualCliente = 10; 
+int contAtualCliente = 10;
 int contAux = MIN_ALOC;
 int total_pacotes = 0;
 int cont = 0;
 int cont1 = 10;
 
-typedef struct{
+typedef struct
+{
     int dia;
     int mes;
     int ano;
 } Data;
 
-typedef struct{
+typedef struct
+{
     char cliente_nome[50];
     char cliente_cpf[16];
     char cliente_telefone[17];
     char cliente_email[50];
 } Cliente;
 
-typedef struct{
+typedef struct
+{
     int pacote_codigo;
     char pacote_destino[50];
     Data pacote_data_ida;
@@ -31,17 +34,17 @@ typedef struct{
     float preco;
 } Pacote;
 
-typedef struct{
+typedef struct
+{
     int reserva_codigo;
     char reserva_cliente_cpf[16];
     int reserva_pacote_codigo;
     Data reserva_data;
 } Reserva;
 
-
 void menu(Pacote **v_pacotes, Cliente **v_Clientes, Reserva **v_reserva);
 
-//CLIENTES===============================================================
+// CLIENTES===============================================================
 void carregarDadosClientes(Cliente **v_Clientes);
 void carregarAlteracaoClientes(Cliente **v_Clientes);
 
@@ -49,11 +52,11 @@ void escolhaOpcaoCliente(Cliente **v_Clientes);
 
 void cadastroCliente(Cliente **v_Clientes);
 void alteraCliente(Cliente **v_Clientes);
-void consultaCliente (Cliente **v_Clientes);
-void listarClientes(Cliente *v_Clientes); 
+void consultaCliente(Cliente **v_Clientes);
+void listarClientes(Cliente *v_Clientes);
 void removerCliente();
 
-//PACOTES===============================================================
+// PACOTES===============================================================
 void carregarDadosPacotes(Pacote **v_pacotes);
 void carregarAlteracaoPacotes(Pacote **v_pacotes);
 
@@ -63,32 +66,45 @@ void cadastrarPacote(Pacote **v_pacotes);
 void consultarPacote(Pacote **v_pacotes);
 void alterarPacote(Pacote **v_pacotes);
 void listarPacotes(Pacote *v_pacotes);
-void removerPacote();
+void removerPacote(Pacote **v_pacotes);
 
-//RESERVA===============================================================
+// RESERVA===============================================================
 
 void carregarReservasPrevias(Reserva **v_reserva);
 void salvarReservas(Reserva **v_reserva);
 void expandirMemoria(Reserva **v_reserva);
 void menu(Pacote **v_pacotes, Cliente **v_Clientes, Reserva **v_reserva);
-    void escolhaReserva(Reserva **v_reserva);
-        void cadastraReserva(Reserva **v_reserva);
-        void alteraReserva(Reserva **v_reserva);
-            void alteraCodigoReserva(Reserva **v_reserva);
-            void alteraDataReserva(Reserva **v_reserva);
-            void alteraCpfReserva(Reserva **v_reserva);
-            void alteraCodigoPacoteReserva(Reserva **v_reserva);
-        void removeReserva(Reserva **v_reserva);
-    // void gerarRelatorio();
+void escolhaReserva(Reserva **v_reserva, Pacote **v_pacotes, Cliente **v_Clientes);
+void cadastraReserva(Reserva **v_reserva, Pacote **v_pacotes, Cliente **v_Clientes);
+void alteraReserva(Reserva **v_reserva);
+void alteraCodigoReserva(Reserva **v_reserva);
+void alteraDataReserva(Reserva **v_reserva);
+void alteraCpfReserva(Reserva **v_reserva);
+void alteraCodigoPacoteReserva(Reserva **v_reserva);
+void listarReservas(Reserva *v_reserva);
+void removeReserva(Reserva **v_reserva);
+// void gerarRelatorio();
 
 //===============================================================
 
-int main(){
-    Pacote *v_pacotes = (Pacote*)malloc(MIN_ALOC * sizeof(Pacote));
-    Cliente *v_Clientes = (Cliente*) malloc(contAux*sizeof(Cliente)); 
-    Reserva *v_reserva = (Reserva*) calloc (10,sizeof(Reserva));
-    
-    if(v_reserva == NULL || v_Clientes == NULL || v_pacotes == NULL){
+int main()
+{
+    Pacote *v_pacotes = (Pacote *)malloc(MIN_ALOC * sizeof(Pacote));
+    Cliente *v_Clientes = (Cliente *)malloc(contAux * sizeof(Cliente));
+    Reserva *v_reserva = (Reserva *)calloc(10, sizeof(Reserva));
+
+    if (v_reserva == NULL)
+    {
+        printf("Erro ao alocar memoria\n");
+        system("pause");
+        exit(1);
+    }
+    else if(v_Clientes == NULL){
+        printf("Erro ao alocar memoria\n");
+        system("pause");
+        exit(1);
+    }
+    else if(v_pacotes == NULL){
         printf("Erro ao alocar memoria\n");
         system("pause");
         exit(1);
@@ -107,22 +123,25 @@ int main(){
     return 0;
 }
 
-void menu(Pacote **v_pacotes, Cliente **v_Clientes, Reserva **v_reserva){
-
+void menu(Pacote **v_pacotes, Cliente **v_Clientes, Reserva **v_reserva)
+{
+    bool sair = false;
     int opc = -1;
-    printf("===============MENU================\n");
-    printf("Digite uma opcao: \n");
-    printf("1 - Cadastrar, alterar, consultar ou remover clientes\n");
-    printf("2 - Cadastrar, alterar, consultar ou remover pacotes de viagens\n");
-    printf("3 - Cadastrar, alterar ou remover reservas\n");
-    printf("4 - Listar dados de todos os clientes\n");
-    printf("5 - Listar dados de todos os pacotes de viagens\n");
-    printf("6 - Listar todos os dados de todas as reservas\n");
-    printf("7 - Gerar relatorio\n");
-    printf("8 - Sair do programa\n");
-    scanf("%d%*c", &opc);
+    while(!sair){
+        printf("===============MENU================\n");
+        printf("Digite uma opcao: \n");
+        printf("1 - Cadastrar, alterar, consultar ou remover clientes\n");
+        printf("2 - Cadastrar, alterar, consultar ou remover pacotes de viagens\n");
+        printf("3 - Cadastrar, alterar ou remover reservas\n");
+        printf("4 - Listar dados de todos os clientes\n");
+        printf("5 - Listar dados de todos os pacotes de viagens\n");
+        printf("6 - Listar todos os dados de todas as reservas\n");
+        printf("7 - Gerar relatorio\n");
+        printf("8 - Sair do programa\n");
+        scanf("%d%*c", &opc);
 
-    switch(opc){
+        switch (opc)
+        {
         case 1:
             escolhaOpcaoCliente(v_Clientes);
             break;
@@ -130,7 +149,7 @@ void menu(Pacote **v_pacotes, Cliente **v_Clientes, Reserva **v_reserva){
             escolhaOpcaoPacote(v_pacotes);
             break;
         case 3:
-            escolhaReserva(v_reserva);
+            escolhaReserva(v_reserva, v_pacotes, v_Clientes);
             break;
         case 4:
             listarClientes(*v_Clientes);
@@ -145,81 +164,90 @@ void menu(Pacote **v_pacotes, Cliente **v_Clientes, Reserva **v_reserva){
             gerarRelatorio();
             break;
         case 8:
-            exit(0);
+            sair = true;
             break;
         default:
             printf("Digite novamente\n");
             break;
-        
+        }
     }
-    menu(v_pacotes, v_Clientes, v_reserva);
-
 }
 
-//CLIENTES===============================================================
+// CLIENTES===============================================================
 
-void carregarDadosClientes (Cliente **v_Clientes){
+void carregarDadosClientes(Cliente **v_Clientes)
+{
     FILE *p;
     p = fopen("Clientes.txt", "r");
-    
-    if(p == NULL){
-        printf ("Erro ao abrir o arquivo...\n");
-        system ("pause");
+
+    if (p == NULL)
+    {
+        printf("Erro ao abrir o arquivo...\n");
+        system("pause");
         exit(1);
     }
-    int atual=0;
-    while (fscanf (p, "%49[^\n]\n%15[^\n]\n%18[^\n]\n%49[^\n]\n", (*v_Clientes)[atual].cliente_nome,
-    (*v_Clientes)[atual].cliente_cpf, (*v_Clientes)[atual].cliente_telefone,
-    (*v_Clientes)[atual].cliente_email) != EOF){
+    int atual = 0;
+    while (fscanf(p, "%49[^\n]\n%15[^\n]\n%18[^\n]\n%49[^\n]\n", (*v_Clientes)[atual].cliente_nome,
+                  (*v_Clientes)[atual].cliente_cpf, (*v_Clientes)[atual].cliente_telefone,
+                  (*v_Clientes)[atual].cliente_email) != EOF)
+    {
         atual++;
-        if(atual % contAux == 0){
-            Cliente *temp = (Cliente*) realloc(*v_Clientes, (contAux+10)*sizeof(Cliente));
-            if (temp == NULL){
-                printf ("Erro ao alocar mais memória em Clientes...\n");
-                system ("pause");
+        if (atual % contAux == 0)
+        {
+            Cliente *temp = (Cliente *)realloc(*v_Clientes, (contAux + 10) * sizeof(Cliente));
+            if (temp == NULL)
+            {
+                printf("Erro ao alocar mais memória em Clientes...\n");
+                system("pause");
                 exit(1);
             }
             *v_Clientes = temp;
-        }       
-
+        }
     }
     contAtualCliente = atual;
     fclose(p);
 }
 
-void carregarAlteracaoClientes (Cliente **v_Clientes){
+void carregarAlteracaoClientes(Cliente **v_Clientes)
+{
     FILE *p;
     p = fopen("Clientes.txt", "w");
 
-    if (p == NULL){
-        printf ("Erro ao atualizar Clientes no banco de dados...\n");
-        system ("pause");
+    if (p == NULL)
+    {
+        printf("Erro ao atualizar Clientes no banco de dados...\n");
+        system("pause");
         exit(1);
     }
 
-    for (int i=0; i<contAtualCliente; i++){
-        fprintf (p, "%s\n%s\n%s\n%s\n", (*v_Clientes)[i].cliente_nome,
-        (*v_Clientes)[i].cliente_cpf,
-        (*v_Clientes)[i].cliente_telefone,
-        (*v_Clientes)[i].cliente_email);
+    for (int i = 0; i < contAtualCliente; i++)
+    {
+        fprintf(p, "%s\n%s\n%s\n%s\n", (*v_Clientes)[i].cliente_nome,
+                (*v_Clientes)[i].cliente_cpf,
+                (*v_Clientes)[i].cliente_telefone,
+                (*v_Clientes)[i].cliente_email);
     }
     fclose(p);
-    escolhaOpcaoCliente(v_Clientes);
 }
 
-void escolhaOpcaoCliente(Cliente **v_Clientes){
+void escolhaOpcaoCliente(Cliente **v_Clientes)
+{
     int opc1;
 
-    printf ("=======CLIENTES=======\n");
-    printf ("Digite uma opção: \n");
-    printf ("1 - Cadastrar um cliente\n");
-    printf ("2 - Alterar um cliente\n");
-    printf ("3 - Consultar um cliente\n");
-    printf ("4 - Remover um cliente\n");
-    printf ("5 - Menu\n");
-    scanf ("%d%*c", &opc1);
+    bool sair = false;
 
-    switch (opc1){
+    do{
+        printf("=======CLIENTES=======\n");
+        printf("Digite uma opção: \n");
+        printf("1 - Cadastrar um cliente\n");
+        printf("2 - Alterar um cliente\n");
+        printf("3 - Consultar um cliente\n");
+        printf("4 - Remover um cliente\n");
+        printf("5 - Menu\n");
+        scanf("%d%*c", &opc1);
+
+        switch (opc1)
+        {
         case 1:
             cadastroCliente(v_Clientes);
             break;
@@ -233,198 +261,219 @@ void escolhaOpcaoCliente(Cliente **v_Clientes){
             return;
             break;
         case 5:
-            return;
+            sair = true;
             break;
         default:
-            printf ("Digite novamente...\n");
+            printf("Digite novamente...\n");
             break;
-    }        
-
-    escolhaOpcaoCliente(v_Clientes);
-
+        }
+    } while(!sair);
 }
 
-void cadastroCliente(Cliente **v_Clientes){
+void cadastroCliente(Cliente **v_Clientes)
+{
     bool existe;
     char cpfTemp[16];
-    
+
     FILE *p;
     p = fopen("Clientes.txt", "a");
 
-    if(p == NULL){
-        printf ("Erro ao abrir o arquivo...\n");
-        system ("pause");
+    if (p == NULL)
+    {
+        printf("Erro ao abrir o arquivo...\n");
+        system("pause");
         exit(1);
     }
 
     printf("====CADASTRO DE CLIENTES====\n");
 
-    if(contAtualCliente % contAux == 0){
-        Cliente *temp = realloc(*v_Clientes,(contAux+10)*sizeof(Cliente));
-        if(temp==NULL){
-            printf ("Erro ao adicionar memória em Clientes...\n");
-            system ("pause");
+    if (contAtualCliente % contAux == 0)
+    {
+        Cliente *temp = realloc(*v_Clientes, (contAux + 10) * sizeof(Cliente));
+        if (temp == NULL)
+        {
+            printf("Erro ao adicionar memória em Clientes...\n");
+            system("pause");
             exit(1);
         }
         *v_Clientes = temp;
     }
 
-    printf ("Nome do cliente: \n");
+    printf("Nome do cliente: \n");
     gets((*v_Clientes)[contAtualCliente].cliente_nome);
 
-    do{
+    do
+    {
         existe = false;
-        printf ("CPF do cliente: \n");
+        printf("CPF do cliente: \n");
         gets(cpfTemp);
-        for(int i=0; i<contAtualCliente; i++){
-            if(strcmp(cpfTemp, (*v_Clientes)[i].cliente_cpf) == 0){
+        for (int i = 0; i < contAtualCliente; i++)
+        {
+            if (strcmp(cpfTemp, (*v_Clientes)[i].cliente_cpf) == 0)
+            {
                 existe = true;
-                printf ("Cliente já cadastrado...tente novamente\n");
+                printf("Cliente já cadastrado...tente novamente\n");
             }
         }
-    }while(existe==true);
+    } while (existe == true);
 
-    strcpy((*v_Clientes)[contAtualCliente].cliente_cpf,cpfTemp);
+    strcpy((*v_Clientes)[contAtualCliente].cliente_cpf, cpfTemp);
 
-    printf ("Telefone do cliente: \n");        
-    gets((*v_Clientes)[contAtualCliente].cliente_telefone);            
+    printf("Telefone do cliente: \n");
+    gets((*v_Clientes)[contAtualCliente].cliente_telefone);
 
-    printf ("Email do cliente: \n");
+    printf("Email do cliente: \n");
     gets((*v_Clientes)[contAtualCliente].cliente_email);
 
     fprintf(p, "%s\n%s\n%s\n%s\n", (*v_Clientes)[contAtualCliente].cliente_nome,
-    (*v_Clientes)[contAtualCliente].cliente_cpf,
-    (*v_Clientes)[contAtualCliente].cliente_telefone,
-    (*v_Clientes)[contAtualCliente].cliente_email);
-    
+            (*v_Clientes)[contAtualCliente].cliente_cpf,
+            (*v_Clientes)[contAtualCliente].cliente_telefone,
+            (*v_Clientes)[contAtualCliente].cliente_email);
+
     contAtualCliente++;
     fclose(p);
-    printf ("Cadastro concluído...\n");
+    printf("Cadastro concluído...\n");
 }
 
-void alteraCliente(Cliente **v_Clientes){
+void alteraCliente(Cliente **v_Clientes)
+{
     int opc1_2;
     bool existe = false;
-    char cpf_alteracao[50]; 
+    char cpf_alteracao[50];
 
-    printf ("====ALTERAÇÃO DE CLIENTES====\n");
-    do{
+    printf("====ALTERAÇÃO DE CLIENTES====\n");
+    do
+    {
         existe = false;
-        printf ("Deseja alterar dados de qual cliente? \n");
+        printf("Deseja alterar dados de qual cliente? \n");
         gets(cpf_alteracao);
-        for (int i=0; i<contAtualCliente; i++){
-            if (strcmp((*v_Clientes)[i].cliente_cpf, cpf_alteracao) == 0){
+        for (int i = 0; i < contAtualCliente; i++)
+        {
+            if (strcmp((*v_Clientes)[i].cliente_cpf, cpf_alteracao) == 0)
+            {
                 existe = true;
-                printf ("Deseja alterar qual informação do cliente?\n");
-                printf ("1 - Nome\n");
-                printf ("2 - CPF\n");
-                printf ("3 - Telefone\n");
-                printf ("4 - Email\n");
-                scanf ("%d%*c", &opc1_2);
-                switch (opc1_2){
-                    case 1:
-                        printf ("==ALTERAÇÃO DO NOME DO CLIENTE==\n");
-                        printf ("Digite o novo nome: \n");
-                        gets((*v_Clientes)[i].cliente_nome);
-                        printf ("Novo nome: %s\n", (*v_Clientes)[i].cliente_nome);
-                        carregarAlteracaoClientes(v_Clientes);
-                        break;
+                printf("Deseja alterar qual informação do cliente?\n");
+                printf("1 - Nome\n");
+                printf("2 - CPF\n");
+                printf("3 - Telefone\n");
+                printf("4 - Email\n");
+                scanf("%d%*c", &opc1_2);
+                switch (opc1_2)
+                {
+                case 1:
+                    printf("==ALTERAÇÃO DO NOME DO CLIENTE==\n");
+                    printf("Digite o novo nome: \n");
+                    gets((*v_Clientes)[i].cliente_nome);
+                    printf("Novo nome: %s\n", (*v_Clientes)[i].cliente_nome);
+                    carregarAlteracaoClientes(v_Clientes);
+                    break;
 
-                    case 2:
-                        printf ("==ALTERAÇÃO DO CPF DO CLIENTE==\n");
-                        printf ("Digite o novo cpf: \n");
-                        gets((*v_Clientes)[i].cliente_cpf);
-                        printf ("Novo CPF: %s\n", (*v_Clientes)[i].cliente_cpf);
-                    	carregarAlteracaoClientes(v_Clientes);
-                        break;
+                case 2:
+                    printf("==ALTERAÇÃO DO CPF DO CLIENTE==\n");
+                    printf("Digite o novo cpf: \n");
+                    gets((*v_Clientes)[i].cliente_cpf);
+                    printf("Novo CPF: %s\n", (*v_Clientes)[i].cliente_cpf);
+                    carregarAlteracaoClientes(v_Clientes);
+                    break;
 
-                    case 3:
-                        printf ("==ALTERAÇÃO DO TELEFONE DO CLIENTE==\n");
-                        printf ("Digite o novo telefone: \n");
-                        gets((*v_Clientes)[i].cliente_telefone);
-                        printf ("Novo telefone: %s\n", (*v_Clientes)[i].cliente_telefone);
-                        carregarAlteracaoClientes(v_Clientes);
-                        break;
+                case 3:
+                    printf("==ALTERAÇÃO DO TELEFONE DO CLIENTE==\n");
+                    printf("Digite o novo telefone: \n");
+                    gets((*v_Clientes)[i].cliente_telefone);
+                    printf("Novo telefone: %s\n", (*v_Clientes)[i].cliente_telefone);
+                    carregarAlteracaoClientes(v_Clientes);
+                    break;
 
-                        
-                    case 4:
-                        printf ("==ALTERAÇÃO DO EMAIL DO CLIENTE==\n");
-                        printf ("Digite o novo email: \n");
-                        gets((*v_Clientes)[i].cliente_email);
-                        printf ("Novo email: %s\n", (*v_Clientes)[i].cliente_email);
-                    	carregarAlteracaoClientes(v_Clientes);
-                        break;
+                case 4:
+                    printf("==ALTERAÇÃO DO EMAIL DO CLIENTE==\n");
+                    printf("Digite o novo email: \n");
+                    gets((*v_Clientes)[i].cliente_email);
+                    printf("Novo email: %s\n", (*v_Clientes)[i].cliente_email);
+                    carregarAlteracaoClientes(v_Clientes);
+                    break;
                 }
             }
         }
-        if (existe == false){
-            printf ("Não há nenhum cliente cadastrado com esse cpf...tente novamente\n");
+        if (existe == false)
+        {
+            printf("Não há nenhum cliente cadastrado com esse cpf...tente novamente\n");
         }
-    }while (existe == false);
+    } while (existe == false);
 }
 
-void consultaCliente (Cliente **v_Clientes){
+void consultaCliente(Cliente **v_Clientes)
+{
     char cpf_alteracao[50];
     bool existe = false;
 
-    printf ("====CONSULTA DE CLIENTES====\n");
-    do{
+    printf("====CONSULTA DE CLIENTES====\n");
+    do
+    {
         existe = false;
-        printf ("Deseja consultar dados de qual cliente? \n");
+        printf("Deseja consultar dados de qual cliente? \n");
         gets(cpf_alteracao);
-        for (int i=0; i<contAtualCliente; i++){
-            if (strcmp((*v_Clientes)[i].cliente_cpf, cpf_alteracao) == 0){
+        for (int i = 0; i < contAtualCliente; i++)
+        {
+            if (strcmp((*v_Clientes)[i].cliente_cpf, cpf_alteracao) == 0)
+            {
                 existe = true;
-                printf ("Nome: %s\nCPF: %s\nTelefone: %s\nEmail: %s\n", (*v_Clientes)[i].cliente_nome,
-                (*v_Clientes)[i].cliente_cpf,
-                (*v_Clientes)[i].cliente_telefone,
-                (*v_Clientes)[i].cliente_email);
-            } 
+                printf("Nome: %s\nCPF: %s\nTelefone: %s\nEmail: %s\n", (*v_Clientes)[i].cliente_nome,
+                       (*v_Clientes)[i].cliente_cpf,
+                       (*v_Clientes)[i].cliente_telefone,
+                       (*v_Clientes)[i].cliente_email);
+            }
         }
-        if (existe == false){
-            printf ("Não há nenhum cliente cadastrado com esse cpf...tente novamente\n");
+        if (existe == false)
+        {
+            printf("Não há nenhum cliente cadastrado com esse cpf...tente novamente\n");
         }
-    }while(existe == false);
+    } while (existe == false);
 }
 
-void listarClientes(Cliente *v_Clientes){
+void listarClientes(Cliente *v_Clientes)
+{
 
-    printf ("=======LISTA DE REGISTRO DE CLIENTES=======\n");
-    for (int i=0; i<contAtualCliente; i++){
-        printf ("Cliente %d\n", i+1);
-        printf ("Nome: %s\n", v_Clientes[i].cliente_nome);
-        printf ("CPF: %s\n", v_Clientes[i].cliente_cpf);
-        printf ("Telefone: %s\n", v_Clientes[i].cliente_telefone);
-        printf ("Email: %s\n\n", v_Clientes[i].cliente_email);
+    printf("=======LISTA DE REGISTRO DE CLIENTES=======\n");
+    for (int i = 0; i < contAtualCliente; i++)
+    {
+        printf("Cliente %d\n", i + 1);
+        printf("Nome: %s\n", v_Clientes[i].cliente_nome);
+        printf("CPF: %s\n", v_Clientes[i].cliente_cpf);
+        printf("Telefone: %s\n", v_Clientes[i].cliente_telefone);
+        printf("Email: %s\n\n", v_Clientes[i].cliente_email);
     }
-}    
+}
 
-//PACOTES================================================================
-void carregarDadosPacotes(Pacote **v_pacotes) {
+// PACOTES================================================================
+void carregarDadosPacotes(Pacote **v_pacotes)
+{
     FILE *p;
     p = fopen("Pacotes.txt", "r");
-    if (p == NULL) {
+    if (p == NULL)
+    {
         printf("Erro ao abrir arquivo\n");
         exit(1);
     }
 
-
     int total = 0;
     while ((fscanf(p, "%d,%49[^,],%d,%d,%d,%d,%d,%d,%f\n",
-                &(*v_pacotes)[total].pacote_codigo,
-                (*v_pacotes)[total].pacote_destino,
-                &(*v_pacotes)[total].pacote_data_ida.dia,
-                &(*v_pacotes)[total].pacote_data_ida.mes,
-                &(*v_pacotes)[total].pacote_data_ida.ano,
-                &(*v_pacotes)[total].pacote_data_volta.dia,
-                &(*v_pacotes)[total].pacote_data_volta.mes,
-                &(*v_pacotes)[total].pacote_data_volta.ano,
-                &(*v_pacotes)[total].preco)) != EOF) {
+                   &(*v_pacotes)[total].pacote_codigo,
+                   (*v_pacotes)[total].pacote_destino,
+                   &(*v_pacotes)[total].pacote_data_ida.dia,
+                   &(*v_pacotes)[total].pacote_data_ida.mes,
+                   &(*v_pacotes)[total].pacote_data_ida.ano,
+                   &(*v_pacotes)[total].pacote_data_volta.dia,
+                   &(*v_pacotes)[total].pacote_data_volta.mes,
+                   &(*v_pacotes)[total].pacote_data_volta.ano,
+                   &(*v_pacotes)[total].preco)) != EOF)
+    {
         total++;
 
-        if (total % MIN_ALOC == 0) {
+        if (total % MIN_ALOC == 0)
+        {
             Pacote *temp = (Pacote *)realloc((*v_pacotes), (total + MIN_ALOC) * sizeof(Pacote));
-            if (temp == NULL) {
+            if (temp == NULL)
+            {
                 printf("Erro ao alocar mais memoria para pacotes\n");
                 fclose(p);
                 exit(1);
@@ -437,44 +486,49 @@ void carregarDadosPacotes(Pacote **v_pacotes) {
     fclose(p);
 }
 
-void carregarAlteracaoPacotes(Pacote **v_pacotes){
+void carregarAlteracaoPacotes(Pacote **v_pacotes)
+{
     FILE *p;
     p = fopen("Pacotes.txt", "w");
 
-    if(p == NULL){
+    if (p == NULL)
+    {
         printf("Erro ao atualizar pacote no banco de dados\n");
         system("pause");
         exit(1);
     }
 
-    for(int i = 0; i < total_pacotes; i++){
+    for (int i = 0; i < total_pacotes; i++)
+    {
         fprintf(p, "%d,%s,%d,%d,%d,%d,%d,%d,%.2f\n",
-        (*v_pacotes)[i].pacote_codigo, 
-        (*v_pacotes)[i].pacote_destino,
-        (*v_pacotes)[i].pacote_data_ida.dia,
-        (*v_pacotes)[i].pacote_data_ida.mes,
-        (*v_pacotes)[i].pacote_data_ida.ano,
-        (*v_pacotes)[i].pacote_data_volta.dia,
-        (*v_pacotes)[i].pacote_data_volta.mes,
-        (*v_pacotes)[i].pacote_data_volta.ano,
-        (*v_pacotes)[i].preco);
+                (*v_pacotes)[i].pacote_codigo,
+                (*v_pacotes)[i].pacote_destino,
+                (*v_pacotes)[i].pacote_data_ida.dia,
+                (*v_pacotes)[i].pacote_data_ida.mes,
+                (*v_pacotes)[i].pacote_data_ida.ano,
+                (*v_pacotes)[i].pacote_data_volta.dia,
+                (*v_pacotes)[i].pacote_data_volta.mes,
+                (*v_pacotes)[i].pacote_data_volta.ano,
+                (*v_pacotes)[i].preco);
     }
 
     fclose(p);
-    escolhaOpcaoPacote(v_pacotes);
-
 }
 
-void escolhaOpcaoPacote(Pacote **v_pacotes){
+void escolhaOpcaoPacote(Pacote **v_pacotes)
+{
     int opc = -1;
-    printf("===========PACOTES===========\n");
-    printf("1 - Cadastrar novo pacote\n");
-    printf("2 - Alterar pacote\n");
-    printf("3 - Consultar pacote existente\n");
-    printf("4 - Remover pacote\n");
-    printf("5 - Menu\n");
-    scanf("%d%*c", &opc);
-    switch(opc){
+    bool sair = false;
+    while(!sair){
+        printf("===========PACOTES===========\n");
+        printf("1 - Cadastrar novo pacote\n");
+        printf("2 - Alterar pacote\n");
+        printf("3 - Consultar pacote existente\n");
+        printf("4 - Remover pacote\n");
+        printf("5 - Menu\n");
+        scanf("%d%*c", &opc);
+        switch (opc)
+        {
         case 1:
             cadastrarPacote(v_pacotes);
             break;
@@ -485,37 +539,44 @@ void escolhaOpcaoPacote(Pacote **v_pacotes){
             consultarPacote(v_pacotes);
             break;
         case 4:
-            removerPacote();
+            removerPacote(v_pacotes);
             break;
         case 5:
-            return;
+            sair = true;
+            break;
         default:
             printf("Opcao invalida\n");
+        }
     }
-    escolhaOpcaoPacote(v_pacotes);
 }
 
-void cadastrarPacote(Pacote **v_pacotes) {
+void cadastrarPacote(Pacote **v_pacotes)
+{
     int idTemp, flag;
 
     printf("\n===============Cadastro de pacotes===============\n");
 
-    if (total_pacotes % MIN_ALOC == 0) {
+    if (total_pacotes % MIN_ALOC == 0)
+    {
         Pacote *temp = (Pacote *)realloc(*v_pacotes, (total_pacotes + MIN_ALOC) * sizeof(Pacote));
-        if (temp == NULL) {
+        if (temp == NULL)
+        {
             printf("Erro ao adicionar mais memoria para pacotes\n");
             exit(1);
         }
         *v_pacotes = temp;
     }
 
-    do {
+    do
+    {
         flag = 0;
         printf("Digite o id do pacote: ");
         scanf("%d%*c", &idTemp);
 
-        for (int i = 0; i < total_pacotes; i++) {
-            if ((*v_pacotes)[i].pacote_codigo == idTemp) {
+        for (int i = 0; i < total_pacotes; i++)
+        {
+            if ((*v_pacotes)[i].pacote_codigo == idTemp)
+            {
                 flag = 1;
                 printf("Erro, pacote com id ja existente, tente novamente...\n");
             }
@@ -544,7 +605,8 @@ void cadastrarPacote(Pacote **v_pacotes) {
 
     FILE *p;
     p = fopen("Pacotes.txt", "a");
-    if (p == NULL) {
+    if (p == NULL)
+    {
         printf("Erro ao salvar no arquivo Pacotes.txt\n");
         exit(1);
     }
@@ -566,40 +628,46 @@ void cadastrarPacote(Pacote **v_pacotes) {
     printf("Pacote cadastrado com sucesso!\n");
 }
 
-void alterarPacote(Pacote **v_pacotes){
+void alterarPacote(Pacote **v_pacotes)
+{
 
     int codTemp, flag, index, opc;
 
     printf("\n===============Alteração de pacote===============\n");
 
-    do{
+    do
+    {
         flag = 1;
         printf("Digite o codigo do pacote: ");
         scanf("%d%*c", &codTemp);
-        for(int i = 0; i < total_pacotes; i++){
-            if(codTemp == (*v_pacotes)[i].pacote_codigo){
+        for (int i = 0; i < total_pacotes; i++)
+        {
+            if (codTemp == (*v_pacotes)[i].pacote_codigo)
+            {
                 flag = 0;
                 index = i;
             }
         }
-        if (flag == 1) printf("Pacote inexistente, tente novamente....\n");
+        if (flag == 1)
+            printf("Pacote inexistente, tente novamente....\n");
 
-    } while(flag == 1);
+    } while (flag == 1);
 
     printf("Pacote encontrado: \n");
     printf("\nPacote encontrado: \n");
     printf("Codigo: %d\nDestino: %s\nData de ida: %d/%d/%d\nData de volta: %d/%d/%d\nValor: R$%.2f\n\n",
-            (*v_pacotes)[index].pacote_codigo,
-            (*v_pacotes)[index].pacote_destino,
-            (*v_pacotes)[index].pacote_data_ida.dia,
-            (*v_pacotes)[index].pacote_data_ida.mes,
-            (*v_pacotes)[index].pacote_data_ida.ano,
-            (*v_pacotes)[index].pacote_data_volta.dia,
-            (*v_pacotes)[index].pacote_data_volta.mes,
-            (*v_pacotes)[index].pacote_data_volta.ano,
-            (*v_pacotes)[index].preco);
+           (*v_pacotes)[index].pacote_codigo,
+           (*v_pacotes)[index].pacote_destino,
+           (*v_pacotes)[index].pacote_data_ida.dia,
+           (*v_pacotes)[index].pacote_data_ida.mes,
+           (*v_pacotes)[index].pacote_data_ida.ano,
+           (*v_pacotes)[index].pacote_data_volta.dia,
+           (*v_pacotes)[index].pacote_data_volta.mes,
+           (*v_pacotes)[index].pacote_data_volta.ano,
+           (*v_pacotes)[index].preco);
 
-    do{
+    do
+    {
         flag = 0;
         printf("1 - Alterar destino\n");
         printf("2 - Alterar data de ida\n");
@@ -607,138 +675,149 @@ void alterarPacote(Pacote **v_pacotes){
         printf("4 - Alterar valor do pacote\n");
         printf("5 - Cancelar alteracao\n");
         scanf("%d%*c", &opc);
-        switch(opc){
-            case 1:
-                printf("Digite o novo destino: ");
-                gets((*v_pacotes)[index].pacote_destino);
-                break;
-            case 2:
-                printf("Digite a nova data de ida (dd/MM/yyyy): ");
-                scanf("%d%*c%d%*c%d%*c",
-                    &(*v_pacotes)[index].pacote_data_ida.dia,
-                    &(*v_pacotes)[index].pacote_data_ida.mes,
-                    &(*v_pacotes)[index].pacote_data_ida.ano);
-                break;
-            case 3:
-                printf("Digite a nova data de volta (dd/MM/yyyy): ");
-                scanf("%d%*c%d%*c%d%*c",
-                    &(*v_pacotes)[index].pacote_data_volta.dia,
-                    &(*v_pacotes)[index].pacote_data_volta.mes,
-                    &(*v_pacotes)[index].pacote_data_volta.ano);
-                break;
-            case 4:
-                printf("Digite o novo valor do pacote: ");
-                scanf("%f%*c", &(*v_pacotes)[index].preco);
-                break;
-            case 5:
-                printf("Processo cancelado...\n");
-                flag = -1;
-                break;
-            default:
-                printf("Opcao invalida, tente novamente...");
-                flag = 1;
-                break;
+        switch (opc)
+        {
+        case 1:
+            printf("Digite o novo destino: ");
+            gets((*v_pacotes)[index].pacote_destino);
+            break;
+        case 2:
+            printf("Digite a nova data de ida (dd/MM/yyyy): ");
+            scanf("%d%*c%d%*c%d%*c",
+                  &(*v_pacotes)[index].pacote_data_ida.dia,
+                  &(*v_pacotes)[index].pacote_data_ida.mes,
+                  &(*v_pacotes)[index].pacote_data_ida.ano);
+            break;
+        case 3:
+            printf("Digite a nova data de volta (dd/MM/yyyy): ");
+            scanf("%d%*c%d%*c%d%*c",
+                  &(*v_pacotes)[index].pacote_data_volta.dia,
+                  &(*v_pacotes)[index].pacote_data_volta.mes,
+                  &(*v_pacotes)[index].pacote_data_volta.ano);
+            break;
+        case 4:
+            printf("Digite o novo valor do pacote: ");
+            scanf("%f%*c", &(*v_pacotes)[index].preco);
+            break;
+        case 5:
+            printf("Processo cancelado...\n");
+            flag = -1;
+            break;
+        default:
+            printf("Opcao invalida, tente novamente...");
+            flag = 1;
+            break;
         }
-    } while(flag == 1);
+    } while (flag == 1);
 
-    if(flag == 0){
+    if (flag == 0)
+    {
         printf("Pacote alterado com sucesso...\n");
         carregarAlteracaoPacotes(v_pacotes);
     }
-
 }
 
-void consultarPacote(Pacote **v_pacotes){
+void consultarPacote(Pacote **v_pacotes)
+{
 
     int codTemp, flag, index;
 
     printf("\n===============Consulta de pacotes===============\n");
 
-    do{
+    do
+    {
         flag = 1;
         printf("Digite o codigo do pacote: ");
         scanf("%d%*c", &codTemp);
-        for(int i = 0; i < total_pacotes; i++){
-            if(codTemp == (*v_pacotes)[i].pacote_codigo){
+        for (int i = 0; i < total_pacotes; i++)
+        {
+            if (codTemp == (*v_pacotes)[i].pacote_codigo)
+            {
                 flag = 0;
                 index = i;
             }
         }
-        if (flag == 1) printf("Pacote inexistente, tente novamente....\n");
+        if (flag == 1)
+            printf("Pacote inexistente, tente novamente....\n");
 
-    } while(flag == 1);
+    } while (flag == 1);
 
     printf("\nPacote encontrado: \n");
     printf("Codigo: %d\nDestino: %s\nData de ida: %d/%d/%d\nData de volta: %d/%d/%d\nValor: R$%.2f\n\n",
-            (*v_pacotes)[index].pacote_codigo,
-            (*v_pacotes)[index].pacote_destino,
-            (*v_pacotes)[index].pacote_data_ida.dia,
-            (*v_pacotes)[index].pacote_data_ida.mes,
-            (*v_pacotes)[index].pacote_data_ida.ano,
-            (*v_pacotes)[index].pacote_data_volta.dia,
-            (*v_pacotes)[index].pacote_data_volta.mes,
-            (*v_pacotes)[index].pacote_data_volta.ano,
-            (*v_pacotes)[index].preco);
-
+           (*v_pacotes)[index].pacote_codigo,
+           (*v_pacotes)[index].pacote_destino,
+           (*v_pacotes)[index].pacote_data_ida.dia,
+           (*v_pacotes)[index].pacote_data_ida.mes,
+           (*v_pacotes)[index].pacote_data_ida.ano,
+           (*v_pacotes)[index].pacote_data_volta.dia,
+           (*v_pacotes)[index].pacote_data_volta.mes,
+           (*v_pacotes)[index].pacote_data_volta.ano,
+           (*v_pacotes)[index].preco);
 }
 
-void listarPacotes(Pacote *v_pacotes){
+void listarPacotes(Pacote *v_pacotes)
+{
 
     printf("\n=============Listagem de pacotes================\n");
-    for(int i = 0; i < total_pacotes; i++){
-        printf("Id: %d\nDestino: %s\nData de chegada: %d/%d/%d\nData de saida: %d/%d/%d\nValor: %.2f\n\n", v_pacotes[i].pacote_codigo,
-            v_pacotes[i].pacote_destino,v_pacotes[i].pacote_data_ida.dia, v_pacotes[i].pacote_data_ida.mes,
-            v_pacotes[i].pacote_data_ida.ano, v_pacotes[i].pacote_data_volta.dia, v_pacotes[i].pacote_data_volta.mes,
-            v_pacotes[i].pacote_data_volta.ano, v_pacotes[i].preco);
-    }
-
-}
-
-void removerPacote(Reserva **v_reserva){
-
-}
-//RESERVAS 
-
-void escolhaReserva(Reserva **v_reserva){
-
-    int opc=-1;
-    
-    printf("===============RESERVAS================\n");
-    printf ("1 - Cadastrar Reservas\n");
-    printf ("2 - Alterar Reservas\n");
-    printf ("3 - Remover Reservas\n");
-    printf ("4 - Voltar ao Menu\n");
-    printf("=======================================\n");
-
-    scanf ("%d",&opc);
-
-    switch (opc)
+    for (int i = 0; i < total_pacotes; i++)
     {
-    case 1:
-        cadastraReserva(v_reserva);
-        break;
-    case 2:
-        alteraReserva(v_reserva);
-        break;
-    case 3:
-        removeReserva(v_reserva);
-        break;
-    case 4:
-        return;
-        break;
-    default:
-        printf ("Digite novamente\n");
-        break;
+        printf("Id: %d\nDestino: %s\nData de chegada: %d/%d/%d\nData de saida: %d/%d/%d\nValor: %.2f\n\n", v_pacotes[i].pacote_codigo,
+               v_pacotes[i].pacote_destino, v_pacotes[i].pacote_data_ida.dia, v_pacotes[i].pacote_data_ida.mes,
+               v_pacotes[i].pacote_data_ida.ano, v_pacotes[i].pacote_data_volta.dia, v_pacotes[i].pacote_data_volta.mes,
+               v_pacotes[i].pacote_data_volta.ano, v_pacotes[i].preco);
     }
+}
 
-    escolhaReserva(v_reserva);
+void removerPacote(Pacote **v_pacotes)
+{
+    printf("FODASE");
+}
+// RESERVAS
+
+void escolhaReserva(Reserva **v_reserva, Pacote **v_pacotes, Cliente **v_Clientes)
+{
+
+    int opc = -1;
+    bool sair = false;
+
+    while(!sair){
+        printf("===============RESERVAS================\n");
+        printf("1 - Cadastrar Reservas\n");
+        printf("2 - Alterar Reservas\n");
+        printf("3 - Remover Reservas\n");
+        printf("4 - Voltar ao Menu\n");
+        printf("=======================================\n");
+
+        scanf("%d%*c", &opc);
+
+        switch (opc)
+        {
+        case 1:
+            cadastraReserva(v_reserva, v_pacotes, v_Clientes);
+            break;
+        case 2:
+            alteraReserva(v_reserva);
+            break;
+        case 3:
+            removeReserva(v_reserva);
+            break;
+        case 4:
+            sair = true;
+            break;
+        default:
+            printf("Digite novamente\n");
+            break;
+        }
+    }
 
 }
 
-void carregarReservasPrevias(Reserva **v_reserva) {
+void carregarReservasPrevias(Reserva **v_reserva)
+{
 
     FILE *arq = fopen("Reservas.txt", "r");
-    if (arq == NULL) {
+    if (arq == NULL)
+    {
         printf("Arquivo não encontrado. Criando um novo...\n");
         return;
     }
@@ -750,10 +829,12 @@ void carregarReservasPrevias(Reserva **v_reserva) {
                   &(*v_reserva)[cont].reserva_data.mes,
                   &(*v_reserva)[cont].reserva_data.ano,
                   (*v_reserva)[cont].reserva_cliente_cpf,
-                  &(*v_reserva)[cont].reserva_pacote_codigo)==6) {
-        
+                  &(*v_reserva)[cont].reserva_pacote_codigo) == 6)
+    {
+
         cont++;
-        if (cont >= cont1) {
+        if (cont >= cont1)
+        {
             expandirMemoria(v_reserva);
         }
     }
@@ -761,128 +842,202 @@ void carregarReservasPrevias(Reserva **v_reserva) {
     fclose(arq);
 }
 
-void salvarReservas(Reserva **v_reserva){
-    
+void salvarReservas(Reserva **v_reserva)
+{
+    FILE *arq = fopen("Reservas.txt", "w");
+    if (arq == NULL)
+    {
+        printf("Erro ao abrir o arquivo para escrita.\n");
+        return;
+    }
+
+    for (int i = 0; i < cont; i++)
+    {
+        fprintf(arq, "%d %d/%d/%d %s %d\n",
+                (*v_reserva)[i].reserva_codigo,
+                (*v_reserva)[i].reserva_data.dia,
+                (*v_reserva)[i].reserva_data.mes,
+                (*v_reserva)[i].reserva_data.ano,
+                (*v_reserva)[i].reserva_cliente_cpf,
+                (*v_reserva)[i].reserva_pacote_codigo);
+    }
+
+    fclose(arq);
+    printf("Alterações salvas no arquivo!\n");
 }
 
-void expandirMemoria(Reserva **v_reserva){
-
+void expandirMemoria(Reserva **v_reserva)
+{
+    cont1 += 10;
+    Reserva *temp = (Reserva *)realloc((*v_reserva), cont1 * sizeof(Reserva));
+    if (temp == NULL)
+    {
+        printf("Erro ao alocar mais memória.\n");
+        exit(1);
+    }
+    (*v_reserva) = temp;
 }
 
-void cadastraReserva(Reserva **v_reserva){
-    if (cont >= cont1) {
+void cadastraReserva(Reserva **v_reserva, Pacote **v_pacotes, Cliente **v_Clientes)
+{
+    if (cont >= cont1)
+    {
         expandirMemoria(v_reserva);
     }
 
-    int cod_temp,dia_temp,mes_temp,ano_temp,cod_pac_temp,flag=1,v;
+    int cod_temp, dia_temp, mes_temp, ano_temp, cod_pac_temp, flag = 1, v;
     char cpf_temp[16];
 
     printf("===============Comecando cadastro de Reserva================\n");
 
-    do{
-
-        flag =1;
-
+    do
+    {
+        flag = 1;
         printf("Digite o codigo da reserva: ");
         scanf("%d%*c", &cod_temp);
 
-        for (int i=0;i<cont;i++){
-
-            if ((*v_reserva)[i].reserva_codigo == cod_temp){
-                flag=0;
-                break;
-            }
-
-        }
-
-        if (!flag){
-            printf ("Codigo ja existe, digite novamente\n");
-        }
-
-    }while(flag==0);
-
-    (*v_reserva)[cont].reserva_codigo = cod_temp;
-
-    do{
-
-        flag=1;
-
-        printf("Digite a data da reserva: ");
-        scanf("%d/%d/%d%*c", &dia_temp,&mes_temp,&ano_temp);
-
-        for (int i=0;i<cont;i++){
-
-            if ((*v_reserva)[i].reserva_data.dia == dia_temp && (*v_reserva)[i].reserva_data.mes == mes_temp && (*v_reserva)[i].reserva_data.ano == ano_temp){
+        for (int i = 0; i < cont; i++)
+        {
+            if ((*v_reserva)[i].reserva_codigo == cod_temp)
+            {
                 flag = 0;
                 break;
             }
-
         }
 
-        if (!flag){
-            printf ("Data ja existe, realmente esta certa?\n 1 - Sim\t2 - Nao\n");
-            scanf ("%d",&v);
-            if (v==1){
-                flag = 1;
+        if (!flag)
+        {
+            printf("Codigo ja existe, digite novamente\n");
+        }
+
+    } while (flag == 0);
+
+    (*v_reserva)[cont].reserva_codigo = cod_temp;
+
+    flag = 1;
+
+    // DATA DO CADASTRO DO PACOTE==========================================
+    do
+    {
+        flag = 1;
+        printf("Digite a data da reserva: ");
+        scanf("%d/%d/%d%*c", &dia_temp, &mes_temp, &ano_temp);
+
+        for (int i = 0; i < cont; i++)
+        {
+            if ((*v_reserva)[i].reserva_data.dia == dia_temp && (*v_reserva)[i].reserva_data.mes == mes_temp && (*v_reserva)[i].reserva_data.ano == ano_temp)
+            {
+                flag = 0;
+                break;
             }
         }
-
-    }while (flag==0);
+        if (flag == 0)
+            {
+                printf("Data ja existe, deseja cadastrar outro pacote nessa data?\n 1 - Sim\t2 - Nao\n");
+                scanf("%d%*c", &v);
+                if (v == 1)
+                {
+                    flag = 1;
+                }
+            }
+    } while (flag == 0);
 
     (*v_reserva)[cont].reserva_data.dia = dia_temp;
     (*v_reserva)[cont].reserva_data.mes = mes_temp;
     (*v_reserva)[cont].reserva_data.ano = ano_temp;
 
-    do{
-        flag =1;
+    // VERIRICAÇÕES COM O CPF===============================================
+    // VERIFICA SE TEM CLIENTE COM O CPF
+    do
+    {
+        flag = 0;
         printf("Digite o CPF do cliente: ");
         scanf("%s", cpf_temp);
 
-        for (int i=0;i<cont;i++){
+        for (int i = 0; i < contAtualCliente; i++)
+        {
+            if (strcmp((*v_Clientes)[i].cliente_cpf, cpf_temp) == 0)
+            {
+                flag = 1;
+                break;
+            }
+        }
 
-            if (strcmp((*v_reserva)[i].reserva_cliente_cpf,cpf_temp)==0 ){
+        if (flag == 0)
+            printf("Cpf do cliente nao encontrado, tente novamente\n");
+    } while (flag == 0);
+
+    // VERIRICA SE JÁ TEM RESERVA COM ESSE CLIENTE
+    do
+    {
+        flag = 1;
+        for (int i = 0; i < cont; i++)
+        {
+            if (strcmp((*v_reserva)[i].reserva_cliente_cpf, cpf_temp) == 0)
+            {
                 flag = 0;
                 break;
             }
-
         }
 
-        if (!flag){
-            printf ("Cpf ja existe, realmente esta certo?\n 1 - Sim\t2 - Nao\n");
-            scanf ("%d",&v);
-            if (v==1){
+        if (!flag)
+        {
+            printf("Cpf ja tem uma reserva, deseja cadastrar outra?\n 1 - Sim\t2 - Nao\n");
+            scanf("%d%*c", &v);
+            if (v == 1)
+            {
                 flag = 1;
             }
         }
+    } while (flag == 0);
 
-    }while(flag==0);
+    strcpy((*v_reserva)[cont].reserva_cliente_cpf, cpf_temp);
 
-    strcpy((*v_reserva)[cont].reserva_cliente_cpf,cpf_temp);
-    
-
-    do{
-        flag =1;
+    // VERIRICAÇÕES COM O PACOTE===============================================
+    // VERIRICA SE EXISTE O ID DO PACOTE
+    do
+    {
+        flag = 1;
         printf("Digite o codigo do pacote: ");
-        scanf("%d", &cod_pac_temp);
+        scanf("%d%*c", &cod_pac_temp);
 
-        for (int i=0;i<cont;i++){
-
-            if ((*v_reserva)[i].reserva_pacote_codigo == cod_pac_temp){
+        for (int i = 0; i < total_pacotes; i++)
+        {
+            if (cod_pac_temp == (*v_pacotes)[i].pacote_codigo)
+            {
                 flag = 0;
                 break;
             }
-
+        }
+        if (flag == 1){
+            printf("Codigo do pacote inexistente, tente novamente...\n");
         }
 
-        if (!flag){
-            printf ("Esse codigo do pacote ja existe, realmente esta certo?\n 1 - Sim\t2 - Nao\n");
-            scanf ("%d",&v);
-            if (v==1){
-                flag = 1;
+    } while (flag == 1);
+
+    // VERIRICA SE O PACOTE JÁ EXISTE NA RESERVA
+    do
+    {
+        flag = 1;
+        for (int i = 0; i < cont; i++)
+        {
+            if ((*v_reserva)[i].reserva_pacote_codigo == cod_pac_temp)
+            {
+                flag = 0;
+                break;
             }
         }
 
-    }while(flag==0);
+        if (!flag)
+        {
+            printf("Pacote já tem uma reserva, deseja fazer outra??\n 1 - Sim\t2 - Nao\n");
+            scanf("%d%*c", &v);
+            if (v == 1)
+            {
+                flag = 1;
+            }
+        }
+    } while (flag == 0);
 
     (*v_reserva)[cont].reserva_pacote_codigo = cod_pac_temp;
 
@@ -892,18 +1047,19 @@ void cadastraReserva(Reserva **v_reserva){
     printf("Reserva cadastrada com sucesso!\n");
 }
 
-void alteraReserva(Reserva **v_reserva){
+void alteraReserva(Reserva **v_reserva)
+{
 
-    int opc=-1;
+    int opc = -1;
 
-    printf ("===============Comecando Alteracao================\n");
+    printf("===============Comecando Alteracao================\n");
 
-    printf ("1 - Alterar codigo da reserva\n");
-    printf ("2 - Aleterar data da reserva\n");
-    printf ("3 - Alterar CPF do cliente que fez essa reserva\n");
-    printf ("4 - Alterar codigo do pacote dessa reserva\n");
+    printf("1 - Alterar codigo da reserva\n");
+    printf("2 - Aleterar data da reserva\n");
+    printf("3 - Alterar CPF do cliente que fez essa reserva\n");
+    printf("4 - Alterar codigo do pacote dessa reserva\n");
 
-    scanf ("%d%*c",&opc);
+    scanf("%d%*c", &opc);
 
     switch (opc)
     {
@@ -920,321 +1076,341 @@ void alteraReserva(Reserva **v_reserva){
         alteraCodigoPacoteReserva(v_reserva);
         break;
     default:
-        
-        printf ("Digite novamente\n");
+        printf("Digite novamente\n");
         alteraReserva(v_reserva);
-
         break;
     }
-
 }
 
-void alteraCodigoReserva(Reserva **v_reserva){
+void alteraCodigoReserva(Reserva **v_reserva)
+{
 
-    int cod_reserva=-1;
-    int flag=0;
+    int cod_reserva = -1;
+    int flag = 0;
     int x;
     int n_cod;
 
-    printf ("===============Comecando Alteracao de Codigo================\n");
+    printf("===============Comecando Alteracao de Codigo================\n");
 
-    do{
-        flag=0;
-        printf ("Digite o codigo da reserva que quer alterar: \n");
-        scanf ("%d%*c",&cod_reserva);
-        for (int i=0;i<cont;i++){
-            if ((*v_reserva)[i].reserva_codigo == cod_reserva){
-                flag=1;
-                x=i;
-                break;  
+    do
+    {
+        flag = 0;
+        printf("Digite o codigo da reserva que quer alterar: \n");
+        scanf("%d%*c", &cod_reserva);
+        for (int i = 0; i < cont; i++)
+        {
+            if ((*v_reserva)[i].reserva_codigo == cod_reserva)
+            {
+                flag = 1;
+                x = i;
+                break;
             }
-
         }
 
-        if (flag==0){
+        if (flag == 0)
+        {
 
-            printf ("Codigo nao achado, digite novamente\n");
-
+            printf("Codigo nao achado, digite novamente\n");
         }
 
-    }while(flag==0);
+    } while (flag == 0);
 
-    do{
-        flag=1;
-        printf ("Digite o novo codigo: \n");
-        scanf ("%d%*c",&n_cod);
-        for (int i=0;i<cont;i++){
-            if ((*v_reserva)[i].reserva_codigo == n_cod){
-                flag=0;
-                break;  
+    do
+    {
+        flag = 1;
+        printf("Digite o novo codigo: \n");
+        scanf("%d%*c", &n_cod);
+        for (int i = 0; i < cont; i++)
+        {
+            if ((*v_reserva)[i].reserva_codigo == n_cod)
+            {
+                flag = 0;
+                break;
             }
-
         }
 
-        if (!flag){
+        if (!flag)
+        {
 
-            printf ("Codigo ja existe, digite novamente\n");
-
+            printf("Codigo ja existe, digite novamente\n");
         }
 
-    }while(flag==0);
+    } while (flag == 0);
 
     (*v_reserva)[x].reserva_codigo = n_cod;
 
     salvarReservas(v_reserva);
 
     printf("Codigo alterado com sucesso!\n");
-
 }
 
-void alteraDataReserva(Reserva **v_reserva){
+void alteraDataReserva(Reserva **v_reserva)
+{
 
-    int cod_reserva=-1;
-    int flag=0;
-    int x,v;
-    int novo_dia,novo_mes,novo_ano;
+    int cod_reserva = -1;
+    int flag = 0;
+    int x, v;
+    int novo_dia, novo_mes, novo_ano;
 
-    printf ("===============Comecando Alteracao da Data================\n");
+    printf("===============Comecando Alteracao da Data================\n");
 
-    do{
-        flag=0;
-        printf ("Digite o codigo da reserva que quer alterar: \n");
-        scanf ("%d%*c",&cod_reserva);
-        for (int i=0;i<cont;i++){
-            if ((*v_reserva)[i].reserva_codigo == cod_reserva){
-                flag=1;
-                x=i;
-                break;  
+    do
+    {
+        flag = 0;
+        printf("Digite o codigo da reserva que quer alterar: \n");
+        scanf("%d%*c", &cod_reserva);
+        for (int i = 0; i < cont; i++)
+        {
+            if ((*v_reserva)[i].reserva_codigo == cod_reserva)
+            {
+                flag = 1;
+                x = i;
+                break;
             }
-
         }
 
-        if (flag==0){
+        if (flag == 0)
+        {
 
-            printf ("Codigo nao achado, digite novamente\n");
-
+            printf("Codigo nao achado, digite novamente\n");
         }
 
-    }while(flag==0);
+    } while (flag == 0);
 
-    do{
+    do
+    {
 
-        flag=1;
+        flag = 1;
 
         printf("Digite a nova data da reserva: ");
-        scanf("%d/%d/%d%*c", &novo_dia,&novo_mes,&novo_ano);
+        scanf("%d/%d/%d%*c", &novo_dia, &novo_mes, &novo_ano);
 
-        for (int i=0;i<cont;i++){
+        for (int i = 0; i < cont; i++)
+        {
 
-            if ((*v_reserva)[i].reserva_data.dia == novo_dia && (*v_reserva)[i].reserva_data.mes == novo_mes && (*v_reserva)[i].reserva_data.ano == novo_ano){
+            if ((*v_reserva)[i].reserva_data.dia == novo_dia && (*v_reserva)[i].reserva_data.mes == novo_mes && (*v_reserva)[i].reserva_data.ano == novo_ano)
+            {
                 flag = 0;
                 break;
             }
-
         }
 
-        if (!flag){
-            printf ("Data ja existe, realmente esta certa?\n 1 - Sim\t2 - Nao\n");
-            scanf ("%d",&v);
-            if (v==1){
+        if (!flag)
+        {
+            printf("Data ja existe, realmente esta certa?\n 1 - Sim\t2 - Nao\n");
+            scanf("%d", &v);
+            if (v == 1)
+            {
                 flag = 1;
             }
         }
 
-    }while (flag==0);
-    
+    } while (flag == 0);
+
     (*v_reserva)[x].reserva_data.dia = novo_dia;
     (*v_reserva)[x].reserva_data.mes = novo_mes;
     (*v_reserva)[x].reserva_data.ano = novo_ano;
     salvarReservas(v_reserva);
     printf("Codigo alterado com sucesso!\n");
-
 }
 
-void alteraCpfReserva(Reserva **v_reserva){
+void alteraCpfReserva(Reserva **v_reserva)
+{
 
-
-    int cod_reserva, flag = 0, x,v;
+    int cod_reserva, flag = 0, x, v;
     char novo_cpf[16];
-    printf ("\n===============Comecando Alteracao do Cpf================\n");
+    printf("\n===============Comecando Alteracao do Cpf================\n");
 
-    do{
-        flag=0;
-        printf ("Digite o codigo da reserva que quer alterar: \n");
-        scanf ("%d%*c",&cod_reserva);
-        for (int i=0;i<cont;i++){
-            if ((*v_reserva)[i].reserva_codigo == cod_reserva){
-                flag=1;
-                x=i;
-                break;  
+    do
+    {
+        flag = 0;
+        printf("Digite o codigo da reserva que quer alterar: \n");
+        scanf("%d%*c", &cod_reserva);
+        for (int i = 0; i < cont; i++)
+        {
+            if ((*v_reserva)[i].reserva_codigo == cod_reserva)
+            {
+                flag = 1;
+                x = i;
+                break;
             }
-
         }
 
-        if (flag==0){
+        if (flag == 0)
+        {
 
-            printf ("Codigo nao achado, digite novamente\n");
-
+            printf("Codigo nao achado, digite novamente\n");
         }
 
-    }while(flag==0);
-    
+    } while (flag == 0);
 
-    do{
-        flag =1;
+    do
+    {
+        flag = 1;
         printf("Digite o novo Cpf do cliente: ");
         scanf("%s", novo_cpf);
 
-        for (int i=0;i<cont;i++){
+        for (int i = 0; i < cont; i++)
+        {
 
-            if (strcmp((*v_reserva)[i].reserva_cliente_cpf,novo_cpf)==0 ){
+            if (strcmp((*v_reserva)[i].reserva_cliente_cpf, novo_cpf) == 0)
+            {
                 flag = 0;
                 break;
             }
-
         }
 
-        if (!flag){
-            printf ("Cpf ja existe, realmente esta certo?\n 1 - Sim\t2 - Nao\n");
-            scanf ("%d",&v);
-            if (v==1){
+        if (!flag)
+        {
+            printf("Cpf ja existe, realmente esta certo?\n 1 - Sim\t2 - Nao\n");
+            scanf("%d", &v);
+            if (v == 1)
+            {
                 flag = 1;
             }
         }
 
-    }while(flag==0);
+    } while (flag == 0);
 
-    strcpy((*v_reserva)[x].reserva_cliente_cpf,novo_cpf);
+    strcpy((*v_reserva)[x].reserva_cliente_cpf, novo_cpf);
     salvarReservas(v_reserva);
     printf("Codigo alterado com sucesso!\n");
-
 }
 
-void alteraCodigoPacoteReserva(Reserva **v_reserva){
+void alteraCodigoPacoteReserva(Reserva **v_reserva)
+{
 
-    printf ("\n===============Comecando Alteracao do Codigo do Pacote================\n");
+    printf("\n===============Comecando Alteracao do Codigo do Pacote================\n");
 
     int cod_reserva, flag = 0, x;
-    int novo_cod_pac,v;
+    int novo_cod_pac, v;
 
-    do{
-        flag=0;
-        printf ("Digite o codigo da reserva que quer alterar: \n");
-        scanf ("%d%*c",&cod_reserva);
-        for (int i=0;i<cont;i++){
-            if ((*v_reserva)[i].reserva_codigo == cod_reserva){
-                flag=1;
-                x=i;
-                break;  
+    do
+    {
+        flag = 0;
+        printf("Digite o codigo da reserva que quer alterar: \n");
+        scanf("%d%*c", &cod_reserva);
+        for (int i = 0; i < cont; i++)
+        {
+            if ((*v_reserva)[i].reserva_codigo == cod_reserva)
+            {
+                flag = 1;
+                x = i;
+                break;
             }
-
         }
 
-        if (flag==0){
+        if (flag == 0)
+        {
 
-            printf ("Codigo nao achado, digite novamente\n");
-
+            printf("Codigo nao achado, digite novamente\n");
         }
 
-    }while(flag==0);
+    } while (flag == 0);
 
-    do{
-        flag =1;
+    do
+    {
+        flag = 1;
         printf("Digite o novo codigo do pacote: ");
         scanf("%d", &novo_cod_pac);
 
-        for (int i=0;i<cont;i++){
+        for (int i = 0; i < cont; i++)
+        {
 
-            if ((*v_reserva)[i].reserva_pacote_codigo == novo_cod_pac){
+            if ((*v_reserva)[i].reserva_pacote_codigo == novo_cod_pac)
+            {
                 flag = 0;
                 break;
             }
-
         }
 
-        if (!flag){
-            printf ("Esse codigo do pacote ja existe, realmente esta certo?\n 1 - Sim\t2 - Nao\n");
-            scanf ("%d",&v);
-            if (v==1){
+        if (!flag)
+        {
+            printf("Esse codigo do pacote ja existe, realmente esta certo?\n 1 - Sim\t2 - Nao\n");
+            scanf("%d", &v);
+            if (v == 1)
+            {
                 flag = 1;
             }
         }
 
-    }while(flag==0);
+    } while (flag == 0);
 
     (*v_reserva)[x].reserva_pacote_codigo = novo_cod_pac;
     salvarReservas(v_reserva);
     printf("Codigo alterado com sucesso!\n");
-
 }
 
+void removeReserva(Reserva **v_reserva)
+{
 
-void removeReserva(Reserva **v_reserva){
-
-    int v,flag,cod_reserva,x;
+    int v, flag, cod_reserva, x;
 
     printf("===============Comecando remocao de Reserva================\n");
 
-    printf ("Voce quer remover todas as reservas ou alguma em especifico ?:\n 1 - Todas\t2 - Especifica\n");
+    printf("Voce quer remover todas as reservas ou alguma em especifico ?:\n 1 - Todas\t2 - Especifica\n");
 
-    scanf ("%d%*c",&v);
+    scanf("%d%*c", &v);
 
-    if (v==1){
+    if (v == 1)
+    {
 
-        cont =0;
-
-    }else{
+        cont = 0;
+    }
+    else
+    {
 
         printf("===============Removendo Reserva especifica================\n");
 
-        do{
-            flag=0;
-            printf ("Digite o codigo da reserva que voce quer remover: \n");
-            scanf ("%d%*c",&cod_reserva);
-            for (int i=0;i<cont;i++){
-                if ((*v_reserva)[i].reserva_codigo == cod_reserva){
-                    flag=1;
-                    x=i;
-                    break;  
+        do
+        {
+            flag = 0;
+            printf("Digite o codigo da reserva que voce quer remover: \n");
+            scanf("%d%*c", &cod_reserva);
+            for (int i = 0; i < cont; i++)
+            {
+                if ((*v_reserva)[i].reserva_codigo == cod_reserva)
+                {
+                    flag = 1;
+                    x = i;
+                    break;
                 }
-
             }
 
-            if (flag==0){
+            if (flag == 0)
+            {
 
-                printf ("Codigo nao achado, digite novamente\n");
-
+                printf("Codigo nao achado, digite novamente\n");
             }
 
-        }while(flag==0);
+        } while (flag == 0);
 
+        for (int i = x; i < cont - 1; i++)
+        {
 
-        for (int i=x;i<cont-1;i++){
-
-            strcpy((*v_reserva)[i].reserva_cliente_cpf,(*v_reserva)[i+1].reserva_cliente_cpf);
-            (*v_reserva)[i].reserva_codigo = (*v_reserva)[i+1].reserva_codigo;
-            (*v_reserva)[i].reserva_pacote_codigo = (*v_reserva)[i+1].reserva_pacote_codigo;
-            (*v_reserva)[i].reserva_data.dia = (*v_reserva)[i+1].reserva_data.dia;
-            (*v_reserva)[i].reserva_data.mes = (*v_reserva)[i+1].reserva_data.mes;
-            (*v_reserva)[i].reserva_data.ano = (*v_reserva)[i+1].reserva_data.ano;
+            strcpy((*v_reserva)[i].reserva_cliente_cpf, (*v_reserva)[i + 1].reserva_cliente_cpf);
+            (*v_reserva)[i].reserva_codigo = (*v_reserva)[i + 1].reserva_codigo;
+            (*v_reserva)[i].reserva_pacote_codigo = (*v_reserva)[i + 1].reserva_pacote_codigo;
+            (*v_reserva)[i].reserva_data.dia = (*v_reserva)[i + 1].reserva_data.dia;
+            (*v_reserva)[i].reserva_data.mes = (*v_reserva)[i + 1].reserva_data.mes;
+            (*v_reserva)[i].reserva_data.ano = (*v_reserva)[i + 1].reserva_data.ano;
         }
         cont--;
-
-
     }
-        
 
-        salvarReservas(v_reserva);
-        printf ("Remocao feita com sucesso!\n");
-
+    salvarReservas(v_reserva);
+    printf("Remocao feita com sucesso!\n");
 }
 
-void listarReservas(Reserva **v_reserva){
-    printf("fodase");
+void listarReservas(Reserva *v_reserva)
+{
+    for(int i = 0; i < cont; i++){
+        printf("Reserva cod: %d\n", v_reserva[i].reserva_codigo);
+        printf("Reserva codigo do pagote: %d\n", v_reserva[i].reserva_pacote_codigo);
+    }
 }
 
-
-//RELATORIOS
-void gerarRelatorio(){
-
+// RELATORIOS
+void gerarRelatorio()
+{
 }
