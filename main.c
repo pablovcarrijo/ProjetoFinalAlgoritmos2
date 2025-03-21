@@ -48,25 +48,25 @@ void menu(Pacote **v_pacotes, Cliente **v_Clientes, Reserva **v_reserva);
 void carregarDadosClientes(Cliente **v_Clientes);
 void carregarAlteracaoClientes(Cliente **v_Clientes);
 
-void escolhaOpcaoCliente(Cliente **v_Clientes);
+void escolhaOpcaoCliente(Cliente **v_Clientes, Reserva **v_reserva);
 
 void cadastroCliente(Cliente **v_Clientes);
 void alteraCliente(Cliente **v_Clientes);
 void consultaCliente(Cliente **v_Clientes);
 void listarClientes(Cliente *v_Clientes);
-void removerCliente();
+void removerCliente(Cliente **v_Clientes, Reserva **v_reserva);
 
 // PACOTES===============================================================
 void carregarDadosPacotes(Pacote **v_pacotes);
 void carregarAlteracaoPacotes(Pacote **v_pacotes);
 
-void escolhaOpcaoPacote(Pacote **v_pacotes);
+void escolhaOpcaoPacote(Pacote **v_pacotes, Reserva **v_reserva);
 
 void cadastrarPacote(Pacote **v_pacotes);
 void consultarPacote(Pacote **v_pacotes);
 void alterarPacote(Pacote **v_pacotes);
 void listarPacotes(Pacote *v_pacotes);
-void removerPacote(Pacote **v_pacotes);
+void removerPacote(Pacote **v_pacotes, Reserva **v_reserva);
 
 // RESERVA===============================================================
 
@@ -143,10 +143,10 @@ void menu(Pacote **v_pacotes, Cliente **v_Clientes, Reserva **v_reserva)
         switch (opc)
         {
         case 1:
-            escolhaOpcaoCliente(v_Clientes);
+            escolhaOpcaoCliente(v_Clientes, v_reserva);
             break;
         case 2:
-            escolhaOpcaoPacote(v_pacotes);
+            escolhaOpcaoPacote(v_pacotes, v_reserva);
             break;
         case 3:
             escolhaReserva(v_reserva, v_pacotes, v_Clientes);
@@ -230,7 +230,7 @@ void carregarAlteracaoClientes(Cliente **v_Clientes)
     fclose(p);
 }
 
-void escolhaOpcaoCliente(Cliente **v_Clientes)
+void escolhaOpcaoCliente(Cliente **v_Clientes, Reserva **v_reserva)
 {
     int opc1;
 
@@ -258,7 +258,7 @@ void escolhaOpcaoCliente(Cliente **v_Clientes)
             consultaCliente(v_Clientes);
             break;
         case 4:
-            return;
+            removerCliente(v_Clientes, v_reserva);
             break;
         case 5:
             sair = true;
@@ -430,6 +430,47 @@ void consultaCliente(Cliente **v_Clientes)
     } while (existe == false);
 }
 
+void removerCliente (Cliente **v_Clientes, Reserva **v_reserva){
+
+    char cpf_alteracao[50];
+    bool existe = false;
+    int index;
+
+    printf ("=======REMOÇÃO DE CLIENTES=======\n");
+
+    do{
+        existe = false;
+        printf("Deseja remover qual cliente? \n");
+        gets(cpf_alteracao);
+
+        for (int i = 0; i < contAtualCliente; i++){
+            if (strcmp((*v_Clientes)[i].cliente_cpf, cpf_alteracao) == 0){
+                existe = true;
+                index = i;
+            }
+        }
+        if(existe == false){
+            printf ("CPF não cadastrado...tente novamente\n");
+        }
+    }while (existe == false);
+
+
+    existe = false;
+    for(int i = 0; i < cont; i++){
+        if(strcmp((*v_Clientes)[index].cliente_cpf, (*v_reserva)[i].reserva_cliente_cpf) == 0){
+            printf("Cliente possui uma reserva, exclua sua reserva antes...\n");
+            existe = true;
+        }
+    }
+
+    if(existe == false){
+        strcpy((*v_Clientes)[index].cliente_cpf, (*v_Clientes)[--contAtualCliente].cliente_cpf);
+        carregarAlteracaoClientes(v_Clientes);
+        printf("Cliente removido com sucesso...\n");
+    }
+}
+
+
 void listarClientes(Cliente *v_Clientes)
 {
 
@@ -515,7 +556,7 @@ void carregarAlteracaoPacotes(Pacote **v_pacotes)
     fclose(p);
 }
 
-void escolhaOpcaoPacote(Pacote **v_pacotes)
+void escolhaOpcaoPacote(Pacote **v_pacotes, Reserva **v_reserva)
 {
     int opc = -1;
     bool sair = false;
@@ -539,7 +580,7 @@ void escolhaOpcaoPacote(Pacote **v_pacotes)
             consultarPacote(v_pacotes);
             break;
         case 4:
-            removerPacote(v_pacotes);
+            removerPacote(v_pacotes, v_reserva);
             break;
         case 5:
             sair = true;
@@ -768,9 +809,41 @@ void listarPacotes(Pacote *v_pacotes)
     }
 }
 
-void removerPacote(Pacote **v_pacotes)
+void removerPacote(Pacote **v_pacotes, Reserva **v_reserva)
 {
-    printf("FODASE");
+    int idTemp;
+    int flag;
+    int index;
+
+    do{
+        flag = 0;
+        printf("Digite o id do pacote: ");
+        scanf("%d%*c", &idTemp);
+        
+        for(int i = 0; i < total_pacotes; i++){
+            if((*v_pacotes)[i].pacote_codigo == idTemp){
+                flag = 1;
+                index = i;
+                break;
+            }
+        }
+        if(flag == 0) printf("Pacote inexistente, tente novamente...\n");
+    } while(flag == 0);
+
+    for(int i = 0; i < cont; i++){
+        if((*v_pacotes)[index].pacote_codigo == (*v_reserva)[i].reserva_codigo){
+            printf("Pacote cadastrado em uma reserva, exclua a reserva para excluir o pacote...\n");
+            flag = 0;
+            break;
+        }  
+    }
+
+    if(flag == 1){
+        (*v_pacotes)[index] = (*v_pacotes)[--total_pacotes];
+        printf("Pacote removido com sucesso...\n");
+        carregarAlteracaoPacotes(v_pacotes);
+    }
+
 }
 // RESERVAS
 
@@ -1404,9 +1477,13 @@ void removeReserva(Reserva **v_reserva)
 
 void listarReservas(Reserva *v_reserva)
 {
+    printf ("==========Reservas==========\n");
     for(int i = 0; i < cont; i++){
-        printf("Reserva cod: %d\n", v_reserva[i].reserva_codigo);
-        printf("Reserva codigo do pagote: %d\n", v_reserva[i].reserva_pacote_codigo);
+        printf("Codigo da reserva: %d\n", v_reserva[i].reserva_codigo);
+        printf("Codigo do pacote: %d\n", v_reserva[i].reserva_pacote_codigo);
+        printf ("Data em que a reserva foi feita: %d/%d/%d\n",v_reserva[i].reserva_data.dia,v_reserva[i].reserva_data.mes,v_reserva[i].reserva_data.ano);
+        printf ("CPF do cliente que fez essa reserva: %s\n",v_reserva[i].reserva_cliente_cpf);
+        printf ("============================\n");
     }
 }
 

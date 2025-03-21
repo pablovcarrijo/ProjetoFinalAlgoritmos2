@@ -3,7 +3,7 @@ João Silva
 (11) 98765-4321
 joao.silva@example.com
 Maria Oliveira
-987.654.321-00
+123.456.789-11
 (21) 12345-6789
 maria.oliveira@example.com
 Carlos Souza
@@ -43,14 +43,10 @@ Ricardo Umberto Ferreira
 (92) 33333-3333
 roberto.ferreira@example.com
 Pablo Vinicius
-124.567.789-10
+123.456.789-11
 (34) 9999-9999
 pablo@gmail
 Gui
 123.456.789-10
 (34) 9999-9932
 gui@gmail.com
-Pablo Carrijo
-123.456.789-11
-(91) 22222-2234
-pablao@gmail.com
