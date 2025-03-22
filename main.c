@@ -341,7 +341,7 @@ void alteraCliente(Cliente **v_Clientes)
     bool existe = false;
     char cpf_alteracao[50];
 
-    printf("====ALTERAÇÃO DE CLIENTES====\n");
+    printf("====ALTERACAOO DE CLIENTES====\n");
     do
     {
         existe = false;
@@ -352,7 +352,7 @@ void alteraCliente(Cliente **v_Clientes)
             if (strcmp((*v_Clientes)[i].cliente_cpf, cpf_alteracao) == 0)
             {
                 existe = true;
-                printf("Deseja alterar qual informação do cliente?\n");
+                printf("Deseja alterar qual informacao do cliente?\n");
                 printf("1 - Nome\n");
                 printf("2 - CPF\n");
                 printf("3 - Telefone\n");
@@ -361,7 +361,7 @@ void alteraCliente(Cliente **v_Clientes)
                 switch (opc1_2)
                 {
                 case 1:
-                    printf("==ALTERAÇÃO DO NOME DO CLIENTE==\n");
+                    printf("==ALTERACAO DO NOME DO CLIENTE==\n");
                     printf("Digite o novo nome: \n");
                     gets((*v_Clientes)[i].cliente_nome);
                     printf("Novo nome: %s\n", (*v_Clientes)[i].cliente_nome);
@@ -369,7 +369,7 @@ void alteraCliente(Cliente **v_Clientes)
                     break;
 
                 case 2:
-                    printf("==ALTERAÇÃO DO CPF DO CLIENTE==\n");
+                    printf("==ALTERACAO DO CPF DO CLIENTE==\n");
                     printf("Digite o novo cpf: \n");
                     gets((*v_Clientes)[i].cliente_cpf);
                     printf("Novo CPF: %s\n", (*v_Clientes)[i].cliente_cpf);
@@ -377,7 +377,7 @@ void alteraCliente(Cliente **v_Clientes)
                     break;
 
                 case 3:
-                    printf("==ALTERAÇÃO DO TELEFONE DO CLIENTE==\n");
+                    printf("==ALTERACAO DO TELEFONE DO CLIENTE==\n");
                     printf("Digite o novo telefone: \n");
                     gets((*v_Clientes)[i].cliente_telefone);
                     printf("Novo telefone: %s\n", (*v_Clientes)[i].cliente_telefone);
@@ -385,7 +385,7 @@ void alteraCliente(Cliente **v_Clientes)
                     break;
 
                 case 4:
-                    printf("==ALTERAÇÃO DO EMAIL DO CLIENTE==\n");
+                    printf("==ALTERACAO DO EMAIL DO CLIENTE==\n");
                     printf("Digite o novo email: \n");
                     gets((*v_Clientes)[i].cliente_email);
                     printf("Novo email: %s\n", (*v_Clientes)[i].cliente_email);
@@ -450,7 +450,7 @@ void removerCliente (Cliente **v_Clientes, Reserva **v_reserva){
             }
         }
         if(existe == false){
-            printf ("CPF não cadastrado...tente novamente\n");
+            printf ("CPF nAo cadastrado...tente novamente\n");
         }
     }while (existe == false);
 
@@ -593,7 +593,7 @@ void escolhaOpcaoPacote(Pacote **v_pacotes, Reserva **v_reserva)
 
 void cadastrarPacote(Pacote **v_pacotes)
 {
-    int idTemp, flag, dia1Temp, mes1Temp, ano1Mes, dia2Temp, mes2Temp, ano2Temp, diferencaDias = 0;
+    int idTemp, flag, dia1Temp, mes1Temp, ano1Temp, dia2Temp, mes2Temp, ano2Temp, diferencaDias = 0;
 
     printf("\n===============Cadastro de pacotes===============\n");
 
@@ -970,7 +970,7 @@ void cadastraReserva(Reserva **v_reserva, Pacote **v_pacotes, Cliente **v_Client
         expandirMemoria(v_reserva);
     }
 
-    int cod_temp, dia_temp, mes_temp, ano_temp, cod_pac_temp, flag = 1, v;
+    int cod_temp, dia_temp, mes_temp, ano_temp, cod_pac_temp, flag = 1, v, diferencaDias, index;
     char cpf_temp[16];
 
     printf("===============Comecando cadastro de Reserva================\n");
@@ -1000,36 +1000,6 @@ void cadastraReserva(Reserva **v_reserva, Pacote **v_pacotes, Cliente **v_Client
     (*v_reserva)[cont].reserva_codigo = cod_temp;
 
     flag = 1;
-
-    // DATA DO CADASTRO DO PACOTE==========================================
-    do
-    {
-        flag = 1;
-        printf("Digite a data da reserva: ");
-        scanf("%d/%d/%d%*c", &dia_temp, &mes_temp, &ano_temp);
-
-        for (int i = 0; i < cont; i++)
-        {
-            if ((*v_reserva)[i].reserva_data.dia == dia_temp && (*v_reserva)[i].reserva_data.mes == mes_temp && (*v_reserva)[i].reserva_data.ano == ano_temp)
-            {
-                flag = 0;
-                break;
-            }
-        }
-        if (flag == 0)
-            {
-                printf("Data ja existe, deseja cadastrar outro pacote nessa data?\n 1 - Sim\t2 - Nao\n");
-                scanf("%d%*c", &v);
-                if (v == 1)
-                {
-                    flag = 1;
-                }
-            }
-    } while (flag == 0);
-
-    (*v_reserva)[cont].reserva_data.dia = dia_temp;
-    (*v_reserva)[cont].reserva_data.mes = mes_temp;
-    (*v_reserva)[cont].reserva_data.ano = ano_temp;
 
     // VERIRICAÇÕES COM O CPF===============================================
     // VERIFICA SE TEM CLIENTE COM O CPF
@@ -1091,6 +1061,7 @@ void cadastraReserva(Reserva **v_reserva, Pacote **v_pacotes, Cliente **v_Client
             if (cod_pac_temp == (*v_pacotes)[i].pacote_codigo)
             {
                 flag = 0;
+                index = i;
                 break;
             }
         }
@@ -1099,6 +1070,9 @@ void cadastraReserva(Reserva **v_reserva, Pacote **v_pacotes, Cliente **v_Client
         }
 
     } while (flag == 1);
+
+
+    (*v_reserva)[cont].reserva_pacote_codigo = cod_pac_temp;
 
     // VERIRICA SE O PACOTE JÁ EXISTE NA RESERVA
     do
@@ -1124,7 +1098,49 @@ void cadastraReserva(Reserva **v_reserva, Pacote **v_pacotes, Cliente **v_Client
         }
     } while (flag == 0);
 
-    (*v_reserva)[cont].reserva_pacote_codigo = cod_pac_temp;
+    // DATA DO CADASTRO DO PACOTE==========================================
+    do{
+        //VERIFICA SE A DATA DA RESERVA É ANTERIOR A DATA DE IDA DO PACOTE
+        flag = 1;
+        diferencaDias = 0;
+        do{
+            printf("Digite a data da reserva: ");
+            scanf("%d/%d/%d%*c", &dia_temp, &mes_temp, &ano_temp);
+    
+            diferencaDias = calculaDiasData((*v_pacotes)[index].pacote_data_ida.dia,
+            (*v_pacotes)[index].pacote_data_ida.mes,(*v_pacotes)[index].pacote_data_ida.ano) - calculaDiasData(dia_temp, mes_temp, ano_temp);
+    
+            if(diferencaDias < 0){
+                printf("Datas incompativeis, escolha um pacote com data posterior a data da reserva...\n");
+            }
+        } while(diferencaDias < 0);           
+
+            
+        //VERIFICA SE PODE CADASTRAR MAIS UMA DATA IGUAL NA RESERVA
+        for (int i = 0; i < cont; i++)
+        {
+            if ((*v_reserva)[i].reserva_data.dia == dia_temp && (*v_reserva)[i].reserva_data.mes == mes_temp && (*v_reserva)[i].reserva_data.ano == ano_temp)
+            {
+                flag = 0;
+                break;
+            }
+        }
+        if (flag == 0)
+            {
+                printf("Data ja existe, deseja cadastrar mais um pacote nessa data?\n 1 - Sim\t2 - Nao\n");
+                scanf("%d%*c", &v);
+                if (v == 1)
+                {
+                    flag = 1;
+                }
+            }
+
+    } while(flag == 0);
+
+
+    (*v_reserva)[cont].reserva_data.dia = dia_temp;
+    (*v_reserva)[cont].reserva_data.mes = mes_temp;
+    (*v_reserva)[cont].reserva_data.ano = ano_temp;
 
     cont++;
     salvarReservas(v_reserva);
@@ -1524,6 +1540,8 @@ int calculaDiasData(int dia, int mes, int ano){
             totalDias += 1;
         }
     }
+
+    totalDias += dia;
     return totalDias;
 
 }
