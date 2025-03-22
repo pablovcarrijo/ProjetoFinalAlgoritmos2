@@ -292,7 +292,7 @@ void cadastroCliente(Cliente **v_Clientes)
         Cliente *temp = realloc(*v_Clientes, (contAux + 10) * sizeof(Cliente));
         if (temp == NULL)
         {
-            printf("Erro ao adicionar memória em Clientes...\n");
+            printf("Erro ao adicionar memoria em Clientes...\n");
             system("pause");
             exit(1);
         }
@@ -312,7 +312,7 @@ void cadastroCliente(Cliente **v_Clientes)
             if (strcmp(cpfTemp, (*v_Clientes)[i].cliente_cpf) == 0)
             {
                 existe = true;
-                printf("Cliente já cadastrado...tente novamente\n");
+                printf("Cliente ja cadastrado...tente novamente\n");
             }
         }
     } while (existe == true);
@@ -638,13 +638,13 @@ void cadastrarPacote(Pacote **v_pacotes)
         printf("Digite a data (dd/MM/yyyy): ");
         scanf("%d%*c%d%*c%d%*c", &dia2Temp, &mes2Temp, &ano2Temp);
 
-        diferencaDias = calculaDiasData(dia2Temp, mes2Temp, ano2Temp) - calculaDiasData(dia1Temp, mes1Temp, ano1Temp);
+        diferencaDias = calculaDiasData(dia1Temp, mes1Temp, ano1Temp, dia2Temp, mes2Temp, ano2Temp);
 
-        if(diferencaDias < 0){
+        if(diferencaDias > 0){
             printf("Datas incompativeis, insira uma data de volta posterior a de ida...\n");
         }
 
-    } while(diferencaDias  < 0);
+    } while(diferencaDias  > 0);
     
     (*v_pacotes)[total_pacotes].pacote_data_ida.dia = dia1Temp;
     (*v_pacotes)[total_pacotes].pacote_data_ida.mes = mes1Temp;
@@ -903,7 +903,7 @@ void carregarReservasPrevias(Reserva **v_reserva)
     FILE *arq = fopen("Reservas.txt", "r");
     if (arq == NULL)
     {
-        printf("Arquivo não encontrado. Criando um novo...\n");
+        printf("Arquivo nao encontrado. Criando um novo...\n");
         return;
     }
 
@@ -948,7 +948,7 @@ void salvarReservas(Reserva **v_reserva)
     }
 
     fclose(arq);
-    printf("Alterações salvas no arquivo!\n");
+    printf("Alteracoes salvas no arquivo!\n");
 }
 
 void expandirMemoria(Reserva **v_reserva)
@@ -1107,13 +1107,14 @@ void cadastraReserva(Reserva **v_reserva, Pacote **v_pacotes, Cliente **v_Client
             printf("Digite a data da reserva: ");
             scanf("%d/%d/%d%*c", &dia_temp, &mes_temp, &ano_temp);
     
-            diferencaDias = calculaDiasData((*v_pacotes)[index].pacote_data_ida.dia,
-            (*v_pacotes)[index].pacote_data_ida.mes,(*v_pacotes)[index].pacote_data_ida.ano) - calculaDiasData(dia_temp, mes_temp, ano_temp);
-    
-            if(diferencaDias < 0){
+            diferencaDias = calculaDiasData(dia_temp, mes_temp, ano_temp,
+            (*v_pacotes)[index].pacote_data_ida.dia, (*v_pacotes)[index].pacote_data_ida.mes,
+            (*v_pacotes)[index].pacote_data_ida.ano);
+
+            if(diferencaDias > 0){
                 printf("Datas incompativeis, escolha um pacote com data posterior a data da reserva...\n");
             }
-        } while(diferencaDias < 0);           
+        } while(diferencaDias > 0);           
 
             
         //VERIFICA SE PODE CADASTRAR MAIS UMA DATA IGUAL NA RESERVA
@@ -1520,28 +1521,10 @@ void gerarRelatorio()
 {
 }
 
-
 //LOGICA PARA CALCULAR DIFERENÇA DE DATAS
-int ehBissexto(int ano){
-    return (ano % 4 == 0 && ano % 100 != 0) || (ano % 400 == 0);
-} 
-
-int calculaDiasData(int dia, int mes, int ano){
-    int diasPorMes[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-    int totalDias = 0;
-
-    for(int i = 1; i < ano; i++){
-        totalDias += ehBissexto(i) ? 366 : 365;
-    }
-
-    for(int i = 0; i < mes - 1; i++){
-        totalDias += diasPorMes[i];
-        if(i == 1 && ehBissexto(ano)){
-            totalDias += 1;
-        }
-    }
-
-    totalDias += dia;
-    return totalDias;
-
+int calculaDiasData(int d1, int m1, int a1, int d2, int m2, int a2){
+    if (a1 != a2) return a1 - a2;
+    if (m1 != m2) return m1 - m2;
+    if (d1 != d2) return d1 - d2;
+    return 0;
 }
