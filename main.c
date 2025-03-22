@@ -593,7 +593,7 @@ void escolhaOpcaoPacote(Pacote **v_pacotes, Reserva **v_reserva)
 
 void cadastrarPacote(Pacote **v_pacotes)
 {
-    int idTemp, flag;
+    int idTemp, flag, dia1Temp, mes1Temp, ano1Mes, dia2Temp, mes2Temp, ano2Temp, diferencaDias = 0;
 
     printf("\n===============Cadastro de pacotes===============\n");
 
@@ -629,17 +629,29 @@ void cadastrarPacote(Pacote **v_pacotes)
     printf("Digite o destino do pacote: ");
     gets((*v_pacotes)[total_pacotes].pacote_destino);
 
-    printf("Data de ida: \n");
-    printf("Digite a data (dd/MM/yyyy): ");
-    scanf("%d%*c%d%*c%d%*c", &(*v_pacotes)[total_pacotes].pacote_data_ida.dia,
-          &(*v_pacotes)[total_pacotes].pacote_data_ida.mes,
-          &(*v_pacotes)[total_pacotes].pacote_data_ida.ano);
+    do{
+        printf("Data de ida: \n");
+        printf("Digite a data (dd/MM/yyyy): ");
+        scanf("%d%*c%d%*c%d%*c", &dia1Temp, &mes1Temp, &ano1Temp);
+    
+        printf("Data de volta: \n");
+        printf("Digite a data (dd/MM/yyyy): ");
+        scanf("%d%*c%d%*c%d%*c", &dia2Temp, &mes2Temp, &ano2Temp);
 
-    printf("Data de volta: \n");
-    printf("Digite a data (dd/MM/yyyy): ");
-    scanf("%d%*c%d%*c%d%*c", &(*v_pacotes)[total_pacotes].pacote_data_volta.dia,
-          &(*v_pacotes)[total_pacotes].pacote_data_volta.mes,
-          &(*v_pacotes)[total_pacotes].pacote_data_volta.ano);
+        diferencaDias = calculaDiasData(dia2Temp, mes2Temp, ano2Temp) - calculaDiasData(dia1Temp, mes1Temp, ano1Temp);
+
+        if(diferencaDias < 0){
+            printf("Datas incompativeis, insira uma data de volta posterior a de ida...\n");
+        }
+
+    } while(diferencaDias  < 0);
+    
+    (*v_pacotes)[total_pacotes].pacote_data_ida.dia = dia1Temp;
+    (*v_pacotes)[total_pacotes].pacote_data_ida.mes = mes1Temp;
+    (*v_pacotes)[total_pacotes].pacote_data_ida.ano = ano1Temp;
+    (*v_pacotes)[total_pacotes].pacote_data_volta.dia = dia2Temp;
+    (*v_pacotes)[total_pacotes].pacote_data_volta.mes = mes2Temp;
+    (*v_pacotes)[total_pacotes].pacote_data_volta.ano = ano2Temp;
 
     printf("Digite o valor do pacote: R$");
     scanf("%f", &(*v_pacotes)[total_pacotes].preco);
@@ -1490,4 +1502,28 @@ void listarReservas(Reserva *v_reserva)
 // RELATORIOS
 void gerarRelatorio()
 {
+}
+
+
+//LOGICA PARA CALCULAR DIFERENÇA DE DATAS
+int ehBissexto(int ano){
+    return (ano % 4 == 0 && ano % 100 != 0) || (ano % 400 == 0);
+} 
+
+int calculaDiasData(int dia, int mes, int ano){
+    int diasPorMes[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    int totalDias = 0;
+
+    for(int i = 1; i < ano; i++){
+        totalDias += ehBissexto(i) ? 366 : 365;
+    }
+
+    for(int i = 0; i < mes - 1; i++){
+        totalDias += diasPorMes[i];
+        if(i == 1 && ehBissexto(ano)){
+            totalDias += 1;
+        }
+    }
+    return totalDias;
+
 }
