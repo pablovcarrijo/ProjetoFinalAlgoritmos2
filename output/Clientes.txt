@@ -50,3 +50,7 @@ Gui
 123.456.789-10
 (34) 9999-9932
 gui@gmail.com
+Mariana Cardoso
+213.432.956-10
+(34) 99339-2313
+mariana@gmail.com

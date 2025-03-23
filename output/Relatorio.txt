@@ -1,0 +1,280 @@
+==============================
+	CLIENTE
+Nome: João Silva
+Cpf: 123.456.789-00
+Telefone: (11) 98765-4321
+E-mail: joao.silva@example.com
+		RESERVA
+	Codigo: 1
+	Cpf do cliente: 123.456.789-00
+	Data que a reserva foi feita: 11/11/2023
+	Codigo do pacote: 1
+			PACOTE
+		Codigo do pacote: 1
+		Destino: Paris
+		Data de ida: 1/6/2025
+		Data de volta: 15/6/2025
+		Preco: R$8500.50
+==============================
+==============================
+	CLIENTE
+Nome: Maria Oliveira
+Cpf: 123.456.789-11
+Telefone: (21) 12345-6789
+E-mail: maria.oliveira@example.com
+		RESERVA
+	Codigo: 8
+	Cpf do cliente: 123.456.789-11
+	Data que a reserva foi feita: 30/7/2023
+	Codigo do pacote: 8
+			PACOTE
+		Codigo do pacote: 8
+		Destino: Londres
+		Data de ida: 10/4/2025
+		Data de volta: 25/4/2025
+		Preco: R$9800.25
+==============================
+==============================
+	CLIENTE
+Nome: Carlos Souza
+Cpf: 456.789.123-00
+Telefone: (31) 55555-5555
+E-mail: carlos.souza@example.com
+		RESERVA
+	Codigo: 2
+	Cpf do cliente: 456.789.123-00
+	Data que a reserva foi feita: 22/6/2023
+	Codigo do pacote: 2
+			PACOTE
+		Codigo do pacote: 2
+		Destino: Tokyo
+		Data de ida: 10/7/2025
+		Data de volta: 25/7/2025
+		Preco: R$10200.00
+		RESERVA
+	Codigo: 5
+	Cpf do cliente: 456.789.123-00
+	Data que a reserva foi feita: 5/4/2023
+	Codigo do pacote: 5
+			PACOTE
+		Codigo do pacote: 5
+		Destino: Cancún
+		Data de ida: 1/10/2025
+		Data de volta: 15/10/2025
+		Preco: R$6800.00
+==============================
+==============================
+	CLIENTE
+Nome: Ana Costa Mendes
+Cpf: 789.123.456-00
+Telefone: (41) 99999-9999
+E-mail: ana.costa@example.com
+		RESERVA
+	Codigo: 6
+	Cpf do cliente: 789.123.456-00
+	Data que a reserva foi feita: 18/5/2023
+	Codigo do pacote: 6
+			PACOTE
+		Codigo do pacote: 6
+		Destino: Barcelona
+		Data de ida: 5/11/2025
+		Data de volta: 20/11/2025
+		Preco: R$8400.45
+==============================
+==============================
+	CLIENTE
+Nome: Pedro Santos
+Cpf: 321.654.987-00
+Telefone: (51) 88888-8888
+E-mail: pedro.santos@example.com
+	ESTE CLIENTE NaO POSSUI RESERVAS CADASTRADAS
+==============================
+==============================
+	CLIENTE
+Nome: Fernanda Lima
+Cpf: 654.987.321-00
+Telefone: (61) 77777-7777
+E-mail: fernanda.lima@example.com
+		RESERVA
+	Codigo: 18
+	Cpf do cliente: 654.987.321-00
+	Data que a reserva foi feita: 5/8/2024
+	Codigo do pacote: 3
+			PACOTE
+		Codigo do pacote: 3
+		Destino: New York
+		Data de ida: 5/8/2025
+		Data de volta: 20/8/2025
+		Preco: R$7600.75
+==============================
+==============================
+	CLIENTE
+Nome: Ricardo Almeida
+Cpf: 147.258.369-00
+Telefone: (71) 66666-6666
+E-mail: ricardo.almeida@example.com
+	ESTE CLIENTE NaO POSSUI RESERVAS CADASTRADAS
+==============================
+==============================
+	CLIENTE
+Nome: Juliana Pereira
+Cpf: 258.369.147-00
+Telefone: (81) 44444-4422
+E-mail: juliana.pereira@example.com
+	ESTE CLIENTE NaO POSSUI RESERVAS CADASTRADAS
+==============================
+==============================
+	CLIENTE
+Nome: Lucas Rodrigues Junior
+Cpf: 369.147.258-00
+Telefone: (85) 33333-3333
+E-mail: lucas.mendes@example.com
+	ESTE CLIENTE NaO POSSUI RESERVAS CADASTRADAS
+==============================
+==============================
+	CLIENTE
+Nome: Patricia Rocha Almeida
+Cpf: 951.753.852-00
+Telefone: (91) 22222-2222
+E-mail: patricia.rocha@example.com
+	ESTE CLIENTE NaO POSSUI RESERVAS CADASTRADAS
+==============================
+==============================
+	CLIENTE
+Nome: Ricardo Umberto Ferreira
+Cpf: 753.951.852-00
+Telefone: (92) 33333-3333
+E-mail: roberto.ferreira@example.com
+		RESERVA
+	Codigo: 9
+	Cpf do cliente: 753.951.852-00
+	Data que a reserva foi feita: 12/8/2023
+	Codigo do pacote: 9
+			PACOTE
+		Codigo do pacote: 9
+		Destino: Dubai
+		Data de ida: 15/3/2025
+		Data de volta: 30/3/2025
+		Preco: R$15000.00
+		RESERVA
+	Codigo: 12
+	Cpf do cliente: 753.951.852-00
+	Data que a reserva foi feita: 10/5/2025
+	Codigo do pacote: 11
+			PACOTE
+		Codigo do pacote: 11
+		Destino: Natal
+		Data de ida: 10/5/2025
+		Data de volta: 18/5/2025
+		Preco: R$2000.00
+==============================
+==============================
+	CLIENTE
+Nome: Pablo Vinicius
+Cpf: 123.456.789-11
+Telefone: (34) 9999-9999
+E-mail: pablo@gmail
+		RESERVA
+	Codigo: 8
+	Cpf do cliente: 123.456.789-11
+	Data que a reserva foi feita: 30/7/2023
+	Codigo do pacote: 8
+			PACOTE
+		Codigo do pacote: 8
+		Destino: Londres
+		Data de ida: 10/4/2025
+		Data de volta: 25/4/2025
+		Preco: R$9800.25
+==============================
+==============================
+	CLIENTE
+Nome: Gui
+Cpf: 123.456.789-10
+Telefone: (34) 9999-9932
+E-mail: gui@gmail.com
+		RESERVA
+	Codigo: 3
+	Cpf do cliente: 123.456.789-10
+	Data que a reserva foi feita: 25/2/2023
+	Codigo do pacote: 3
+			PACOTE
+		Codigo do pacote: 3
+		Destino: New York
+		Data de ida: 5/8/2025
+		Data de volta: 20/8/2025
+		Preco: R$7600.75
+		RESERVA
+	Codigo: 7
+	Cpf do cliente: 123.456.789-10
+	Data que a reserva foi feita: 22/6/2023
+	Codigo do pacote: 7
+			PACOTE
+		Codigo do pacote: 7
+		Destino: Ilhas Maldivas
+		Data de ida: 1/12/2025
+		Data de volta: 15/12/2025
+		Preco: R$15000.90
+		RESERVA
+	Codigo: 11
+	Cpf do cliente: 123.456.789-10
+	Data que a reserva foi feita: 10/8/2023
+	Codigo do pacote: 21
+			PACOTE
+		Codigo do pacote: 21
+		Destino: Joao Pessoa
+		Data de ida: 11/3/2023
+		Data de volta: 11/3/2023
+		Preco: R$9000.00
+		RESERVA
+	Codigo: 14
+	Cpf do cliente: 123.456.789-10
+	Data que a reserva foi feita: 10/9/2025
+	Codigo do pacote: 3
+			PACOTE
+		Codigo do pacote: 3
+		Destino: New York
+		Data de ida: 5/8/2025
+		Data de volta: 20/8/2025
+		Preco: R$7600.75
+		RESERVA
+	Codigo: 16
+	Cpf do cliente: 123.456.789-10
+	Data que a reserva foi feita: 11/3/2025
+	Codigo do pacote: 12
+			PACOTE
+		Codigo do pacote: 12
+		Destino: Maldivas
+		Data de ida: 12/10/2026
+		Data de volta: 20/11/2026
+		Preco: R$20000.00
+		RESERVA
+	Codigo: 19
+	Cpf do cliente: 123.456.789-10
+	Data que a reserva foi feita: 5/3/2024
+	Codigo do pacote: 4
+			PACOTE
+		Codigo do pacote: 4
+		Destino: Florianopolis
+		Data de ida: 12/9/2025
+		Data de volta: 10/9/2024
+		Preco: R$3000.00
+		RESERVA
+	Codigo: 20
+	Cpf do cliente: 123.456.789-10
+	Data que a reserva foi feita: 23/3/2023
+	Codigo do pacote: 4
+			PACOTE
+		Codigo do pacote: 4
+		Destino: Florianopolis
+		Data de ida: 12/9/2025
+		Data de volta: 10/9/2024
+		Preco: R$3000.00
+==============================
+==============================
+	CLIENTE
+Nome: Mariana Cardoso
+Cpf: 213.432.956-10
+Telefone: (34) 99339-2313
+E-mail: mariana@gmail.com
+	ESTE CLIENTE NaO POSSUI RESERVAS CADASTRADAS
+==============================

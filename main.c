@@ -76,16 +76,17 @@ void expandirMemoria(Reserva **v_reserva);
 void menu(Pacote **v_pacotes, Cliente **v_Clientes, Reserva **v_reserva);
 void escolhaReserva(Reserva **v_reserva, Pacote **v_pacotes, Cliente **v_Clientes);
 void cadastraReserva(Reserva **v_reserva, Pacote **v_pacotes, Cliente **v_Clientes);
-void alteraReserva(Reserva **v_reserva);
+void alteraReserva(Reserva **v_reserva, Pacote **v_pacotes, Cliente **v_Clientes);
 void alteraCodigoReserva(Reserva **v_reserva);
-void alteraDataReserva(Reserva **v_reserva);
-void alteraCpfReserva(Reserva **v_reserva);
-void alteraCodigoPacoteReserva(Reserva **v_reserva);
+void alteraDataReserva(Reserva **v_reserva, Pacote **v_pacotes);
+void alteraCpfReserva(Reserva **v_reserva, Cliente **v_Clientes);
+void alteraCodigoPacoteReserva(Reserva **v_reserva, Pacote **v_pacotes);
 void listarReservas(Reserva *v_reserva);
 void removeReserva(Reserva **v_reserva);
-// void gerarRelatorio();
+void gerarRelatorio(Pacote *v_pacotes, Cliente *v_Clientes, Reserva *v_reserva);
 
-//===============================================================
+//LOGICA PARA CALCULAR DIFERENÇA DE DATAS===============================================================
+int calculaDiasData(int d1, int m1, int a1, int d2, int m2, int a2);
 
 int main()
 {
@@ -161,7 +162,7 @@ void menu(Pacote **v_pacotes, Cliente **v_Clientes, Reserva **v_reserva)
             listarReservas(*v_reserva);
             break;
         case 7:
-            gerarRelatorio();
+            gerarRelatorio(*v_pacotes,*v_Clientes,*v_reserva);
             break;
         case 8:
             sair = true;
@@ -470,7 +471,6 @@ void removerCliente (Cliente **v_Clientes, Reserva **v_reserva){
     }
 }
 
-
 void listarClientes(Cliente *v_Clientes)
 {
 
@@ -684,7 +684,7 @@ void cadastrarPacote(Pacote **v_pacotes)
 void alterarPacote(Pacote **v_pacotes)
 {
 
-    int codTemp, flag, index, opc;
+    int codTemp, flag, index, opc, d1, m1, a1, d2, m2, a2, diferencaDias = 0;
 
     printf("\n===============Alteração de pacote===============\n");
 
@@ -723,10 +723,9 @@ void alterarPacote(Pacote **v_pacotes)
     {
         flag = 0;
         printf("1 - Alterar destino\n");
-        printf("2 - Alterar data de ida\n");
-        printf("3 - Alterar data de volta\n");
-        printf("4 - Alterar valor do pacote\n");
-        printf("5 - Cancelar alteracao\n");
+        printf("2 - Alterar datas\n");
+        printf("3 - Alterar valor do pacote\n");
+        printf("4 - Cancelar alteracao\n");
         scanf("%d%*c", &opc);
         switch (opc)
         {
@@ -735,24 +734,25 @@ void alterarPacote(Pacote **v_pacotes)
             gets((*v_pacotes)[index].pacote_destino);
             break;
         case 2:
-            printf("Digite a nova data de ida (dd/MM/yyyy): ");
-            scanf("%d%*c%d%*c%d%*c",
-                  &(*v_pacotes)[index].pacote_data_ida.dia,
-                  &(*v_pacotes)[index].pacote_data_ida.mes,
-                  &(*v_pacotes)[index].pacote_data_ida.ano);
+            do{
+                printf("Digite a nova data de ida (dd/MM/yyyy): ");
+                scanf("%d%*c%d%*c%d%*c", &d1, &m1, &a1);
+                printf("Digite a data de volta (dd/MM/yyyy): ");
+                scanf("%d%*c%d%*c%d%*c", &d2, &m2, &a2);
+
+                diferencaDias = calculaDiasData(d1, m1, a1, d2, m2, a2);
+
+                if(diferencaDias > 0){
+                    printf("Data incompativeis, digite uma data de volta posterior a de ida\n");
+                }
+            } while(diferencaDias > 0);
             break;
+
         case 3:
-            printf("Digite a nova data de volta (dd/MM/yyyy): ");
-            scanf("%d%*c%d%*c%d%*c",
-                  &(*v_pacotes)[index].pacote_data_volta.dia,
-                  &(*v_pacotes)[index].pacote_data_volta.mes,
-                  &(*v_pacotes)[index].pacote_data_volta.ano);
-            break;
-        case 4:
             printf("Digite o novo valor do pacote: ");
             scanf("%f%*c", &(*v_pacotes)[index].preco);
             break;
-        case 5:
+        case 4:
             printf("Processo cancelado...\n");
             flag = -1;
             break;
@@ -881,7 +881,7 @@ void escolhaReserva(Reserva **v_reserva, Pacote **v_pacotes, Cliente **v_Cliente
             cadastraReserva(v_reserva, v_pacotes, v_Clientes);
             break;
         case 2:
-            alteraReserva(v_reserva);
+            alteraReserva(v_reserva, v_pacotes, v_Clientes);
             break;
         case 3:
             removeReserva(v_reserva);
@@ -970,7 +970,7 @@ void cadastraReserva(Reserva **v_reserva, Pacote **v_pacotes, Cliente **v_Client
         expandirMemoria(v_reserva);
     }
 
-    int cod_temp, dia_temp, mes_temp, ano_temp, cod_pac_temp, flag = 1, v, diferencaDias, index;
+    int cod_temp, dia_temp, mes_temp, ano_temp, cod_pac_temp, flag = 1, v=1, diferencaDias, index;
     char cpf_temp[16];
 
     printf("===============Comecando cadastro de Reserva================\n");
@@ -1026,6 +1026,11 @@ void cadastraReserva(Reserva **v_reserva, Pacote **v_pacotes, Cliente **v_Client
     do
     {
         flag = 1;
+
+        if (v==2){
+            printf ("Digite o CPF novamente: \n");
+            gets(cpf_temp);
+        }
         for (int i = 0; i < cont; i++)
         {
             if (strcmp((*v_reserva)[i].reserva_cliente_cpf, cpf_temp) == 0)
@@ -1075,9 +1080,16 @@ void cadastraReserva(Reserva **v_reserva, Pacote **v_pacotes, Cliente **v_Client
     (*v_reserva)[cont].reserva_pacote_codigo = cod_pac_temp;
 
     // VERIRICA SE O PACOTE JÁ EXISTE NA RESERVA
+    v=1;
     do
     {
         flag = 1;
+
+        if (v==2){
+            printf ("Digite o codigo do pacote novamente: \n");
+            scanf ("%d%*c",&cod_pac_temp);
+        }
+
         for (int i = 0; i < cont; i++)
         {
             if ((*v_reserva)[i].reserva_pacote_codigo == cod_pac_temp)
@@ -1089,7 +1101,7 @@ void cadastraReserva(Reserva **v_reserva, Pacote **v_pacotes, Cliente **v_Client
 
         if (!flag)
         {
-            printf("Pacote já tem uma reserva, deseja fazer outra??\n 1 - Sim\t2 - Nao\n");
+            printf("Pacote já tem uma reserva, deseja fazer outra?\n 1 - Sim\t2 - Nao\n");
             scanf("%d%*c", &v);
             if (v == 1)
             {
@@ -1099,6 +1111,8 @@ void cadastraReserva(Reserva **v_reserva, Pacote **v_pacotes, Cliente **v_Client
     } while (flag == 0);
 
     // DATA DO CADASTRO DO PACOTE==========================================
+
+    v=1;
     do{
         //VERIFICA SE A DATA DA RESERVA É ANTERIOR A DATA DE IDA DO PACOTE
         flag = 1;
@@ -1108,9 +1122,9 @@ void cadastraReserva(Reserva **v_reserva, Pacote **v_pacotes, Cliente **v_Client
             scanf("%d/%d/%d%*c", &dia_temp, &mes_temp, &ano_temp);
     
             diferencaDias = calculaDiasData(dia_temp, mes_temp, ano_temp,
-            (*v_pacotes)[index].pacote_data_ida.dia, (*v_pacotes)[index].pacote_data_ida.mes,
-            (*v_pacotes)[index].pacote_data_ida.ano);
-
+                (*v_pacotes)[index].pacote_data_ida.dia, (*v_pacotes)[index].pacote_data_ida.mes,
+                (*v_pacotes)[index].pacote_data_ida.ano);
+    
             if(diferencaDias > 0){
                 printf("Datas incompativeis, escolha um pacote com data posterior a data da reserva...\n");
             }
@@ -1149,39 +1163,45 @@ void cadastraReserva(Reserva **v_reserva, Pacote **v_pacotes, Cliente **v_Client
     printf("Reserva cadastrada com sucesso!\n");
 }
 
-void alteraReserva(Reserva **v_reserva)
+void alteraReserva(Reserva **v_reserva, Pacote **v_pacotes, Cliente **v_Clientes)
 {
 
-    int opc = -1;
+    int opc = -1, flag = 0;
+    
+    do{
+        printf("===============Comecando Alteracao================\n");
+        printf("1 - Alterar codigo da reserva\n");
+        printf("2 - Aleterar data da reserva\n");
+        printf("3 - Alterar CPF do cliente que fez essa reserva\n");
+        printf("4 - Alterar codigo do pacote dessa reserva\n");
+        printf("5 - Voltar\n");
 
-    printf("===============Comecando Alteracao================\n");
-
-    printf("1 - Alterar codigo da reserva\n");
-    printf("2 - Aleterar data da reserva\n");
-    printf("3 - Alterar CPF do cliente que fez essa reserva\n");
-    printf("4 - Alterar codigo do pacote dessa reserva\n");
-
-    scanf("%d%*c", &opc);
-
-    switch (opc)
-    {
-    case 1:
-        alteraCodigoReserva(v_reserva);
-        break;
-    case 2:
-        alteraDataReserva(v_reserva);
-        break;
-    case 3:
-        alteraCpfReserva(v_reserva);
-        break;
-    case 4:
-        alteraCodigoPacoteReserva(v_reserva);
-        break;
-    default:
-        printf("Digite novamente\n");
-        alteraReserva(v_reserva);
-        break;
-    }
+        scanf("%d%*c", &opc);
+        switch (opc){
+            case 1:
+                alteraCodigoReserva(v_reserva);
+                flag = 1;
+                break;
+            case 2:
+                alteraDataReserva(v_reserva, v_pacotes);
+                flag = 1;
+                break;
+            case 3:
+                alteraCpfReserva(v_reserva, v_Clientes);
+                flag = 1;
+                break;
+            case 4:
+                alteraCodigoPacoteReserva(v_reserva, v_pacotes);
+                break;
+            case 5:
+                return;
+                break;
+            default:
+                printf("Digite novamente\n");
+                break;
+        }
+    } while(flag == 0);
+    
 }
 
 void alteraCodigoReserva(Reserva **v_reserva)
@@ -1246,13 +1266,15 @@ void alteraCodigoReserva(Reserva **v_reserva)
     printf("Codigo alterado com sucesso!\n");
 }
 
-void alteraDataReserva(Reserva **v_reserva)
+void alteraDataReserva(Reserva **v_reserva, Pacote **v_pacotes)
 {
 
     int cod_reserva = -1;
     int flag = 0;
     int x, v;
     int novo_dia, novo_mes, novo_ano;
+    int diferencaDias;
+    int index;
 
     printf("===============Comecando Alteracao da Data================\n");
 
@@ -1279,35 +1301,52 @@ void alteraDataReserva(Reserva **v_reserva)
 
     } while (flag == 0);
 
-    do
-    {
+    for(int i = 0; i < total_pacotes; i++){
+        if((*v_pacotes)[i].pacote_codigo == (*v_reserva)[x].reserva_pacote_codigo){
+            index = i;
+        }
+    }
 
+    do{
+        //VERIFICA SE A DATA DA RESERVA É ANTERIOR A DATA DE IDA DO PACOTE
         flag = 1;
+        diferencaDias = 0;
+        do{
+            printf("Digite a nova data da reserva: ");
+            scanf("%d/%d/%d%*c", &novo_dia, &novo_mes, &novo_ano);
+    
+            diferencaDias = calculaDiasData(novo_dia, novo_mes, novo_ano,
+                (*v_pacotes)[index].pacote_data_ida.dia, (*v_pacotes)[index].pacote_data_ida.mes,
+                (*v_pacotes)[index].pacote_data_ida.ano);
+    
+            if(diferencaDias > 0){
+                printf("Datas incompativeis, escolha um pacote com data posterior a data da reserva...\n");
+            }
+        } while(diferencaDias > 0);           
 
-        printf("Digite a nova data da reserva: ");
-        scanf("%d/%d/%d%*c", &novo_dia, &novo_mes, &novo_ano);
-
+            
+        //VERIFICA SE PODE CADASTRAR MAIS UMA DATA IGUAL NA RESERVA
         for (int i = 0; i < cont; i++)
         {
-
-            if ((*v_reserva)[i].reserva_data.dia == novo_dia && (*v_reserva)[i].reserva_data.mes == novo_mes && (*v_reserva)[i].reserva_data.ano == novo_ano)
-            {
+            if ((*v_reserva)[i].reserva_data.dia == novo_dia &&
+                (*v_reserva)[i].reserva_data.mes == novo_mes &&
+                (*v_reserva)[i].reserva_data.ano == novo_ano){
                 flag = 0;
                 break;
             }
         }
-
-        if (!flag)
-        {
-            printf("Data ja existe, realmente esta certa?\n 1 - Sim\t2 - Nao\n");
-            scanf("%d", &v);
-            if (v == 1)
+        if (flag == 0)
             {
-                flag = 1;
+                printf("Data ja existe, deseja cadastrar mais um pacote nessa data?\n 1 - Sim\t2 - Nao\n");
+                scanf("%d%*c", &v);
+                if (v == 1)
+                {
+                    flag = 1;
+                }
             }
-        }
 
-    } while (flag == 0);
+    } while(flag == 0);
+
 
     (*v_reserva)[x].reserva_data.dia = novo_dia;
     (*v_reserva)[x].reserva_data.mes = novo_mes;
@@ -1316,7 +1355,7 @@ void alteraDataReserva(Reserva **v_reserva)
     printf("Codigo alterado com sucesso!\n");
 }
 
-void alteraCpfReserva(Reserva **v_reserva)
+void alteraCpfReserva(Reserva **v_reserva, Cliente **v_Clientes)
 {
 
     int cod_reserva, flag = 0, x, v;
@@ -1348,9 +1387,22 @@ void alteraCpfReserva(Reserva **v_reserva)
 
     do
     {
-        flag = 1;
-        printf("Digite o novo Cpf do cliente: ");
-        scanf("%s", novo_cpf);
+        do{
+            flag = 0;
+            printf("Digite o cpf do novo cliente: ");
+            scanf("%s", novo_cpf);
+            for(int i = 0; i < contAtualCliente; i++){
+                if(strcmp((*v_Clientes)[i].cliente_cpf, novo_cpf) == 0){
+                    flag = 1;
+                    break;
+                }
+            }
+    
+            if(flag == 0){
+                printf("Cpf inexistente, tente novamente...\n");
+            }
+    
+        }while(flag == 0);
 
         for (int i = 0; i < cont; i++)
         {
@@ -1362,7 +1414,7 @@ void alteraCpfReserva(Reserva **v_reserva)
             }
         }
 
-        if (!flag)
+        if (flag == 0)
         {
             printf("Cpf ja existe, realmente esta certo?\n 1 - Sim\t2 - Nao\n");
             scanf("%d", &v);
@@ -1379,7 +1431,7 @@ void alteraCpfReserva(Reserva **v_reserva)
     printf("Codigo alterado com sucesso!\n");
 }
 
-void alteraCodigoPacoteReserva(Reserva **v_reserva)
+void alteraCodigoPacoteReserva(Reserva **v_reserva, Pacote **v_pacotes)
 {
 
     printf("\n===============Comecando Alteracao do Codigo do Pacote================\n");
@@ -1410,11 +1462,24 @@ void alteraCodigoPacoteReserva(Reserva **v_reserva)
 
     } while (flag == 0);
 
+   
+
     do
     {
-        flag = 1;
-        printf("Digite o novo codigo do pacote: ");
-        scanf("%d", &novo_cod_pac);
+        do{
+            flag = 0;
+            printf("Digite o novo codigo do pacote: ");
+            scanf("%d%*c", &novo_cod_pac);
+            for(int i = 0; i < total_pacotes; i++){
+                if((*v_pacotes)[i].pacote_codigo == novo_cod_pac){
+                    flag = 1;
+                    break; 
+                }
+            }
+            if(flag == 0){
+                printf("Pacote inexiste, tente novamente...\n");
+            }
+        }while(flag == 0);
 
         for (int i = 0; i < cont; i++)
         {
@@ -1517,11 +1582,72 @@ void listarReservas(Reserva *v_reserva)
 }
 
 // RELATORIOS
-void gerarRelatorio()
+void gerarRelatorio(Pacote *v_pacotes, Cliente *v_Clientes, Reserva *v_reserva)
 {
+
+    FILE *rel = fopen ("Relatorio.txt","w");
+
+    int flag;
+
+    if (rel==NULL){
+        printf ("Falha ao abrir arquivo\n");
+        system("pause");
+        exit(1);
+    }
+
+    for (int i=0;i<contAtualCliente;i++){
+
+        fprintf (rel,"==============================\n");
+
+        fprintf (rel,"\tCLIENTE\n");
+        fprintf (rel,"Nome: %s\nCpf: %s\nTelefone: %s\nE-mail: %s\n",
+            v_Clientes[i].cliente_nome,v_Clientes[i].cliente_cpf,v_Clientes[i].cliente_telefone,v_Clientes[i].cliente_email);
+
+        flag=0;
+
+        for (int j=0;j<cont;j++){
+
+            if (strcmp(v_Clientes[i].cliente_cpf, v_reserva[j].reserva_cliente_cpf)==0){
+
+                flag=1;
+
+                fprintf (rel,"\t\tRESERVA\n");
+                fprintf (rel,"\tCodigo: %d\n\tCpf do cliente: %s\n\tData que a reserva foi feita: %d/%d/%d\n\tCodigo do pacote: %d\n",v_reserva[j].reserva_codigo,v_reserva[j].reserva_cliente_cpf,
+                    v_reserva[j].reserva_data.dia,v_reserva[j].reserva_data.mes,v_reserva[j].reserva_data.ano,v_reserva[j].reserva_pacote_codigo);
+
+                for (int k=0;k<total_pacotes;k++){
+
+                    if (v_reserva[j].reserva_pacote_codigo == v_pacotes[k].pacote_codigo){
+
+                        fprintf (rel,"\t\t\tPACOTE\n");
+                        fprintf (rel,"\t\tCodigo do pacote: %d\n\t\tDestino: %s\n\t\tData de ida: %d/%d/%d\n\t\tData de volta: %d/%d/%d\n\t\tPreco: R$%.2f\n",
+                            v_pacotes[k].pacote_codigo,v_pacotes[k].pacote_destino,v_pacotes[k].pacote_data_ida.dia,v_pacotes[k].pacote_data_ida.mes,
+                            v_pacotes[k].pacote_data_ida.ano,v_pacotes[k].pacote_data_volta.dia,v_pacotes[k].pacote_data_volta.mes,v_pacotes[k].pacote_data_volta.ano,
+                            v_pacotes[k].preco);
+                        break;
+
+                    }
+                    
+                }
+
+            }
+
+        }
+
+        if (!flag) {
+            fprintf(rel, "\tESTE CLIENTE NaO POSSUI RESERVAS CADASTRADAS\n");
+        }
+
+        fprintf (rel,"==============================\n");
+
+    }
+    printf("Relatorio gerado com sucesso!\n");
+    fclose(rel);    
+
 }
 
 //LOGICA PARA CALCULAR DIFERENÇA DE DATAS
+
 int calculaDiasData(int d1, int m1, int a1, int d2, int m2, int a2){
     if (a1 != a2) return a1 - a2;
     if (m1 != m2) return m1 - m2;
